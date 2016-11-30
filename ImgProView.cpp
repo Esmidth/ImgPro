@@ -75,7 +75,7 @@ void CImgProView::OnDraw(CDC* pDC) {
 		for (i = 0; i < height; i++) {
 			for (j = 0; j < width; j++) {
 				gray = image[i * width + j];
-				pDC->SetPixel(j, i, RGB(gray,gray,gray));
+				pDC->SetPixel(j, i, RGB(gray, gray, gray));
 			}
 		}
 	}
@@ -97,7 +97,7 @@ void CImgProView::OnDraw(CDC* pDC) {
 			for (i = 0; i < height; i++) {
 				for (j = 0; j < width; j++) {
 					gray = huiimg[i * width + j];
-					pDC->SetPixel(j + width, i, RGB(gray,gray,gray));
+					pDC->SetPixel(j + width, i, RGB(gray, gray, gray));
 				}
 			}
 		}
@@ -136,7 +136,7 @@ void CImgProView::Dump(CDumpContext& dc) const {
 CImgProDoc* CImgProView::GetDocument() // non-debug version is inline
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CImgProDoc)));
-	return (CImgProDoc*)m_pDocument;
+	return (CImgProDoc*) m_pDocument;
 }
 #endif //_DEBUG
 
@@ -145,7 +145,7 @@ CImgProDoc* CImgProView::GetDocument() // non-debug version is inline
 
 void CImgProView::OnFileOpen() {
 	// TODO: Add your command handler code here
-	CFileDialog MyFDlg(TRUE, NULL,NULL, OFN_HIDEREADONLY, NULL,NULL);
+	CFileDialog MyFDlg(TRUE, NULL, NULL, OFN_HIDEREADONLY, NULL, NULL);
 
 	MyFDlg.m_ofn.lpstrFilter = "(*.lst;*.raw;*.bmp)\0*.lst;*.raw;*.bmp\0";
 	MyFDlg.m_ofn.lpstrInitialDir = "D:\\";
@@ -233,7 +233,6 @@ void CImgProView::readImg(int findex) {
 	pDoc->SetTitle(sFTitle);
 
 	int bicount;
-
 	BITMAPFILEHEADER bmpFHeader;
 	BITMAPINFOHEADER bmiHeader;
 
@@ -249,13 +248,13 @@ void CImgProView::readImg(int findex) {
 	int rowLen;
 
 	rowLen = ((width * bicount) / 8 + 3) / 4 * 4;
-	rowBuff = new BYTE [rowLen];
+	rowBuff = new BYTE[rowLen];
 
 	if (bicount == 8) {
 		RGBQUAD bmiColors[256];
 		fread(bmiColors, sizeof(RGBQUAD), 256, fpImg);
-		image = new BYTE [width * height];
-		rgbimg = new BYTE [3 * width * height];
+		image = new BYTE[width * height];
+		rgbimg = new BYTE[3 * width * height];
 		for (int i = height - 1; i >= 0; i--) {
 			fread(rowBuff, 1, rowLen, fpImg);
 			memcpy(image + i * width, rowBuff, width);
@@ -268,8 +267,8 @@ void CImgProView::readImg(int findex) {
 			}
 	}
 	if (bicount == 24) {
-		image = new BYTE [width * height];
-		rgbimg = new BYTE [rowLen * height];
+		image = new BYTE[width * height];
+		rgbimg = new BYTE[rowLen * height];
 		for (int i = height - 1; i >= 0; i--) {
 			fread(rowBuff, 1, rowLen, fpImg);
 			memcpy(rgbimg + i * 3 * width, rowBuff, 3 * width);
@@ -314,7 +313,7 @@ void CImgProView::OnFileSave() {
 	sprintf(str, fnames + findex * 40);
 	ptr = str;
 	while (*ptr != '.')
-		ptr ++;
+		ptr++;
 	*ptr = 0;
 
 	char fname[80];
