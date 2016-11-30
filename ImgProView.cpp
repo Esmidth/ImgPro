@@ -65,10 +65,29 @@ BOOL CImgProView::PreCreateWindow(CREATESTRUCT& cs) {
 /////////////////////////////////////////////////////////////////////////////
 // CImgProView drawing
 
+void CImgProView::binarize(BYTE* inImg, int width, int height, BYTE* outImg) {
+	//TODO: binarize()
+	if(inImg == nullptr) {
+		return;
+	}
+	BYTE gray;
+	for(int i = 0;i<height;i++) {
+		for (int j = 0; j < width; j++) {
+			gray = inImg[i*width + j];
+			if(gray <40) {
+				outImg[i*width + j] = 0;
+			}
+			else {
+				outImg[i*width + j] = 255;
+			}
+		}
+	}
+}
+
 void CImgProView::OnDraw(CDC* pDC) {
 	CImgProDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
-	// TODO: add draw code for native data here
+	// TODO: Ondraw()
 
 	if (image == 0)
 		return;
@@ -92,7 +111,7 @@ void CImgProView::OnDraw(CDC* pDC) {
 				b = rgbimg[i * 3 * width + j];
 				g = rgbimg[i * 3 * width + j + 1];
 				r = rgbimg[i * 3 * width + j + 2];
-				pDC->SetPixelV(j / 3, i, RGB(r, g, b));
+				pDC->SetPixelV(j / 3, i, RGB(r, r, r));
 			}
 	}
 	if (flag == 1) {
@@ -243,6 +262,7 @@ void CImgProView::readImg(int findex) {
 
 	fread(&bmpFHeader, sizeof(BITMAPFILEHEADER), 1, fpImg);
 	fread(&bmiHeader, sizeof(BITMAPINFOHEADER), 1, fpImg);
+	//fread(ptr,size,count,stream);
 
 	width = bmiHeader.biWidth;
 	height = bmiHeader.biHeight;
@@ -254,6 +274,8 @@ void CImgProView::readImg(int findex) {
 
 	rowLen = ((width * bicount) / 8 + 3) / 4 * 4;
 	rowBuff = new BYTE[rowLen];
+
+	//fpImg is the file stream -- origin
 
 	if (bicount == 8) {
 		RGBQUAD bmiColors[256];
@@ -322,7 +344,7 @@ void CImgProView::OnFileSave() {
 	*ptr = 0;
 
 	char fname[80];
-	sprintf(fname, "D:\\out%s.raw", str);
+	sprintf(fname, "C:\\out%s.raw", str);
 
 	FILE* fpOut;
 	fpOut = fopen(fname, "wb");
@@ -337,21 +359,25 @@ void CImgProView::OnFileSave() {
 
 
 void CImgProView::Color() {
-	// TODO: 在此添加命令处理程序代码
+	// TODO: Color()
 	BYTE r, g, b;
 	int i, j;
 	double hg, hr;
 	double max = 0.0;
 	huiimg = new BYTE[width * height];
-	if(image == 0) {
+	if (image == 0) {
 		AfxMessageBox("No Images Opened\nOpen a Image First", MB_OK, 0);
 		return;
 	}
 	for (i = 0; i < height; i++)
-		for (j = 0; j < 3 * width; j = j + 3) {
-
-			huiimg[i * width + j / 3] = huiimg[i * width + j / 3] / 2;
+		for (j = 0; j < width; j = j++) {
+//			huiimg[i * width + j / 3] = huiimg[i * width + j / 3] / 2;
+			huiimg[i*width + j] = rgbimg[i*width*3 + j*3+2];
 		}
+
+	BYTE* tempImg = new BYTE[width*height];
+	binarize(huiimg, width, height, tempImg);
+	memcpy(huiimg, tempImg, height*width);
 
 	flag = 1;
 	OnInitialUpdate();
@@ -371,4 +397,3 @@ void CImgProView::Recognize() {
 	AfxMessageBox("Recognize!!!", MB_OK, 0);
 	OnInitialUpdate();
 }
-

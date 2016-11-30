@@ -40,6 +40,8 @@ public:
 	int bmpflag,rawflag;
 	int flag;
 
+	void binarize(BYTE* inImg, int width, int height, BYTE* outImg);
+
     // add image processing function 
 
 
