@@ -6,6 +6,9 @@
 #define IDR_MAINFRAME                   128
 #define IDR_IMGPROTYPE                  129
 #define ID_32771                        32771
+#define ID_32772                        32772
+#define ID_32773                        32773
+#define ID_32774                        32774
 
 // Next default values for new objects
 // 

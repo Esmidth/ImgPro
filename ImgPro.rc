@@ -138,6 +138,9 @@ BEGIN
     POPUP "颜色"
     BEGIN
         MENUITEM "颜色分割",                        ID_32771
+		MENUITEM "提取车牌",                        ID_32772
+		MENUITEM "扫描分割",                        ID_32773
+		MENUITEM "OCR识别",                        ID_32774
     END
 END
 

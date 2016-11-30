@@ -31,6 +31,10 @@ BEGIN_MESSAGE_MAP(CImgProView, CView)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, CView::OnFilePrintPreview)
 	ON_COMMAND(ID_32771, &CImgProView::Color)
+	ON_COMMAND(ID_32772,&CImgProView::Extract)
+	ON_COMMAND(ID_32773,&CImgProView::Split)
+	ON_COMMAND(ID_32774,&CImgProView::Recognize)
+
 	END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -148,7 +152,7 @@ void CImgProView::OnFileOpen() {
 	CFileDialog MyFDlg(TRUE, NULL, NULL, OFN_HIDEREADONLY, NULL, NULL);
 
 	MyFDlg.m_ofn.lpstrFilter = "(*.lst;*.raw;*.bmp)\0*.lst;*.raw;*.bmp\0";
-	MyFDlg.m_ofn.lpstrInitialDir = "D:\\";
+	MyFDlg.m_ofn.lpstrInitialDir = "C:\\";
 
 	flag = 0;
 	bmpflag = 0;
@@ -222,6 +226,7 @@ void CImgProView::readImg(int findex) {
 	fpImg = fopen(fullName, "rb");
 	if (fpImg == 0) {
 		AfxMessageBox("Cannot open the list file", MB_OK, 0);
+		//TODO: 20161130 AfxMessageBox
 		return;
 	}
 
@@ -338,6 +343,10 @@ void CImgProView::Color() {
 	double hg, hr;
 	double max = 0.0;
 	huiimg = new BYTE[width * height];
+	if(image == 0) {
+		AfxMessageBox("No Images Opened\nOpen a Image First", MB_OK, 0);
+		return;
+	}
 	for (i = 0; i < height; i++)
 		for (j = 0; j < 3 * width; j = j + 3) {
 
@@ -347,3 +356,19 @@ void CImgProView::Color() {
 	flag = 1;
 	OnInitialUpdate();
 }
+
+void CImgProView::Extract() {
+	AfxMessageBox("Hello World!!!", MB_OK, 0);
+	OnInitialUpdate();
+}
+
+void CImgProView::Split() {
+	AfxMessageBox("Split!!!", MB_OK, 0);
+	OnInitialUpdate();
+}
+
+void CImgProView::Recognize() {
+	AfxMessageBox("Recognize!!!", MB_OK, 0);
+	OnInitialUpdate();
+}
+

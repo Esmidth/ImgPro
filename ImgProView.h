@@ -75,6 +75,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void Color();
+	afx_msg void Extract();
+	afx_msg void Split();
+	afx_msg void Recognize();
 };
 
 #ifndef _DEBUG  // debug version in ImgProView.cpp
