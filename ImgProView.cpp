@@ -88,8 +88,11 @@ void CImgProView::Graying(BYTE* inImg, int width, int height, BYTE* outImg) {
 void CImgProView::Different(BYTE* inImg, int width, int height, BYTE* outImg) {
 	for(int i = 0;i < height;i++) {
 		for (int j = 0; j < width-1; j++) {
-			//outImg[i,j] = 
+			outImg[i*width + j] = abs(inImg[i*width + j+1] - inImg[i*width + j]);
 		}
+	}
+	for(int i  =1;i< height;i++) {
+		outImg[i*width] = 255;
 	}
 }
 
@@ -382,6 +385,9 @@ void CImgProView::Color() {
 		}
 	*/
 	Graying(rgbimg, width, height, huiimg);
+	diffimg = new BYTE[width*height];
+	Different(huiimg, width, height, diffimg);
+	memcpy(huiimg, diffimg, width*height);
 	flag = 1;
 	OnInitialUpdate();
 }

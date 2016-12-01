@@ -29,6 +29,7 @@ public:
 	BYTE *outImg;
 	BYTE *rgbimg;
 	BYTE *huiimg;
+	BYTE *diffimg;
 
 	int width, height;
 
