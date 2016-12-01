@@ -65,6 +65,34 @@ BOOL CImgProView::PreCreateWindow(CREATESTRUCT& cs) {
 /////////////////////////////////////////////////////////////////////////////
 // CImgProView drawing
 
+void CImgProView::Graying(BYTE* inImg, int width, int height, BYTE* outImg) {
+	//TODO:Graying
+	int i, j;
+	BYTE b, g, r;
+	BYTE gray;
+	for (i = 0; i < height; i++)
+		for (j = 0; j < 3 * width; j = j + 3) {
+			b = inImg[i * 3 * width + j];
+			g = inImg[i * 3 * width + j + 1];
+			r = inImg[i * 3 * width + j + 2];
+			if(0.11*b + 0.588*g+0.322*r >= 255) {
+				gray = 255;
+			}
+			else
+				gray = 0.11 * b + 0.588 * g + 0.322 * r;
+			outImg[i * width + j / 3] = gray;
+		}
+
+}
+
+void CImgProView::Different(BYTE* inImg, int width, int height, BYTE* outImg) {
+	for(int i = 0;i < height;i++) {
+		for (int j = 0; j < width-1; j++) {
+			//outImg[i,j] = 
+		}
+	}
+}
+
 void CImgProView::OnDraw(CDC* pDC) {
 	CImgProDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
@@ -337,22 +365,23 @@ void CImgProView::OnFileSave() {
 
 
 void CImgProView::Color() {
-	// TODO: 在此添加命令处理程序代码
+	// TODO: Color();
 	BYTE r, g, b;
 	int i, j;
 	double hg, hr;
 	double max = 0.0;
 	huiimg = new BYTE[width * height];
-	if(image == 0) {
+	if (image == 0) {
 		AfxMessageBox("No Images Opened\nOpen a Image First", MB_OK, 0);
 		return;
 	}
+	/*
 	for (i = 0; i < height; i++)
 		for (j = 0; j < 3 * width; j = j + 3) {
-
 			huiimg[i * width + j / 3] = huiimg[i * width + j / 3] / 2;
 		}
-
+	*/
+	Graying(rgbimg, width, height, huiimg);
 	flag = 1;
 	OnInitialUpdate();
 }
@@ -371,4 +400,3 @@ void CImgProView::Recognize() {
 	AfxMessageBox("Recognize!!!", MB_OK, 0);
 	OnInitialUpdate();
 }
-

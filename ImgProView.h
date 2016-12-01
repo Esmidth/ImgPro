@@ -39,6 +39,9 @@ public:
 	char *fnames;
 	int bmpflag,rawflag;
 	int flag;
+	void Graying(BYTE* inImg, int width, int height, BYTE* outImg);
+	void Different(BYTE* inImg, int width, int height, BYTE* outImg);
+
 
     // add image processing function 
 
