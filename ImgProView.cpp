@@ -171,6 +171,17 @@ void CImgProView::OnDraw(CDC* pDC) {
 			}
 		}
 	}
+	if(flag_kuang == 1) {
+		BYTE r, g, b;
+		for(i = y1;i < y2;i++) {
+			for (j = 3 * x1; j < 3 * x2; j+=3) 				{
+				b = rgbimg[i * 3 * width + j];
+				g = rgbimg[i * 3 * width + j + 1];
+				r = rgbimg[i * 3 * width + j + 2];
+				pDC->SetPixelV(j / 3 - x1, i - y1 + height, RGB(r, g, b));
+			}
+		}
+	}
 }
 
 
@@ -283,6 +294,7 @@ void CImgProView::OnFileOpen() {
 }
 
 void CImgProView::readImg(int findex) {
+	flag_kuang = 0;
 
 	char fullName[120];
 	sprintf(fullName, "%s\\%s", directory, fnames + findex * 100);
@@ -462,7 +474,67 @@ void CImgProView::Color() {
 }
 
 void CImgProView::Extract() {
-	AfxMessageBox("Hello World!!!", MB_OK, 0);
+	int margin = 4;
+	int i, j;
+	int flagb;
+	//255 White 0 Black
+	flag_kuang = 1;
+	if (outImg2) {
+		for (i = 0; i < height; i++) {
+			flagb = 0;
+			for (j = 1; j < width; j++) {
+				if (outImg2[i * width + j - 15] == 0 && outImg2[i * width + j - 14] == 255 && outImg2[i * width + j] == 255) {
+					y1 = i - margin;
+					flagb = 1;
+					j = width;
+				}
+			}
+			if (flagb != 0) {
+				i = height;
+			}
+		}
+		for (i = height; i >= 0; i--) {
+			flagb = 0;
+			for (j = 1; j < width; j++) {
+				if (outImg2[i * width + j - 15] == 255 && outImg2[i * width + j] == 255 && outImg2[i * width + j + 1] == 0) {
+					y2 = i + margin;
+					flagb = 1;
+					j = width;
+					break;
+				}
+			}
+			if (flagb != 0) {
+				i = -1;
+			}
+		}
+		for (j = 1; j < width; j++) {
+			flagb = 0;
+			for (i = 0; i < height; i++) {
+				if (outImg2[(i - 15) * width + j] == 0 && outImg2[(i - 14) * width + j] == 255 && outImg2[i * width + j] == 255) {
+					x1 = j - margin;// 3 ÎªÓàÁ¿
+					flagb = 1;
+					i = height;
+				}
+			}
+			if (flagb != 0) {
+				j = width;
+			}
+		}
+		for (j = width - 2; j >= 0; j--) {
+			flagb = 0;
+			for(i = 0;i < height;i++) {
+				if(outImg2[(i-15)*width+j] == 255 && outImg2[(i-1)*width+j] == 255 && outImg2[(i*width+j)]==0) {
+					x2 = j + margin;
+					flagb = 1;
+					i = height;
+				}
+			}
+			if(flagb != 0) {
+				j = -1;
+			}
+		}
+
+	}
 	OnInitialUpdate();
 }
 

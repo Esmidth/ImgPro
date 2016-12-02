@@ -41,6 +41,10 @@ public:
 	int bmpflag,rawflag;
 	int flag;
 
+	int flag_kuang;
+
+	int x1, x2, y1, y2;
+
 	void Erosion(BYTE* image, int w, int h, BYTE* outImg);
 	void Dilation(BYTE* image, int w, int h, BYTE* outImg);
 
