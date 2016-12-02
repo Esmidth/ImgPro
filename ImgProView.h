@@ -42,6 +42,8 @@ public:
 	int flag;
 	void Graying(BYTE* inImg, int width, int height, BYTE* outImg);
 	void Different(BYTE* inImg, int width, int height, BYTE* outImg);
+	void Erosion(BYTE* inImg, int width, int height, BYTE* outImg);
+	void Dilation(BYTE* inImg, int width, int height, BYTE* outImg);
 
 
     // add image processing function 

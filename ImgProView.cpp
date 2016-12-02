@@ -75,7 +75,7 @@ void CImgProView::Graying(BYTE* inImg, int width, int height, BYTE* outImg) {
 			b = inImg[i * 3 * width + j];
 			g = inImg[i * 3 * width + j + 1];
 			r = inImg[i * 3 * width + j + 2];
-			if(0.11*b + 0.588*g+0.322*r >= 255) {
+			if (0.11 * b + 0.588 * g + 0.322 * r >= 255) {
 				gray = 255;
 			}
 			else
@@ -86,13 +86,81 @@ void CImgProView::Graying(BYTE* inImg, int width, int height, BYTE* outImg) {
 }
 
 void CImgProView::Different(BYTE* inImg, int width, int height, BYTE* outImg) {
-	for(int i = 0;i < height;i++) {
-		for (int j = 0; j < width-1; j++) {
-			outImg[i*width + j] = abs(inImg[i*width + j+1] - inImg[i*width + j]);
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width - 1; j++) {
+			outImg[i * width + j] = abs(inImg[i * width + j + 1] - inImg[i * width + j]);
 		}
 	}
-	for(int i  =1;i< height;i++) {
-		outImg[i*width] = 255;
+	for (int i = 1; i < height; i++) {
+		outImg[i * width] = 255;
+	}
+	/*
+	BYTE tg;
+	BYTE ts;
+	BYTE* temp = new BYTE[height * width];
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width - 1; j++) {
+			tg = max(outImg[i*width + j], outImg[i*width + j + 1]);
+			if (tg > 0) {
+				temp[i * width + j] = (outImg[i * width + j] / tg)*50;
+//				ts = outImg[i * width + j] / tg;
+			}
+			else if (tg == 0) {
+				temp[i * width + j] = 0;
+			}
+		}
+	}
+	memcpy(outImg, temp, height * width);
+*/
+}
+
+void CImgProView::Erosion(BYTE* inImg, int w, int h, BYTE* outImg) {
+	int rept;
+	memcpy(outImg, image, sizeof(BYTE)*w*h);
+	int i, j;
+	int m, n;
+	BYTE flag;
+	for (rept = 0; rept < 2; rept++) {
+		for (i = 1; i<h - 1; i++)
+			for (j = 1; j < w - 1; j++) {
+				if (image[i*w + j] == 255) {
+					flag = 0;
+					for (m = -1; m<2; m++)
+						for (n = -1; n<2; n++)
+							if (image[(i + m)*w + j + n] == 0) {
+								flag++;
+								break;
+							}
+					if (flag > 0)
+						outImg[i*w + j] = 0;
+				}
+			}
+		memcpy(image, outImg, sizeof(BYTE)*width*height);
+	}
+}
+
+void CImgProView::Dilation(BYTE* inImg, int width, int height, BYTE* outImg) {
+	int rept;
+	memcpy(outImg, image, sizeof(BYTE)*width*height);
+	int i, j;
+	int m, n;
+	BYTE flag;
+	for (rept = 0; rept < 2; rept++) {
+		for (i = 1; i<height - 1; i++)
+			for (j = 1; j < width - 1; j++) {
+				if (image[i*width + j] == 0) {
+					flag = 0;
+					for (m = -1; m<2; m++)
+						for (n = -1; n<2; n++)
+							if (image[(i + m)*width + j + n] == 255) {
+								flag++;
+								break;
+							}
+					if (flag > 0)
+						outImg[i*width + j] = 255;
+				}
+			}
+		memcpy(image, outImg, sizeof(BYTE)*width*height);
 	}
 }
 
@@ -385,9 +453,9 @@ void CImgProView::Color() {
 		}
 	*/
 	Graying(rgbimg, width, height, huiimg);
-	diffimg = new BYTE[width*height];
+	diffimg = new BYTE[width * height];
 	Different(huiimg, width, height, diffimg);
-	memcpy(huiimg, diffimg, width*height);
+	memcpy(huiimg, diffimg, width * height);
 	flag = 1;
 	OnInitialUpdate();
 }
