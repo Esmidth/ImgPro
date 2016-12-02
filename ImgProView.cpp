@@ -1,5 +1,6 @@
 // ImgProView.cpp : implementation of the CImgProView class
 //
+//Created by Chingyi Chang 20161203
 
 #include "stdafx.h"
 #include "ImgPro.h"
@@ -64,6 +65,70 @@ BOOL CImgProView::PreCreateWindow(CREATESTRUCT& cs) {
 
 /////////////////////////////////////////////////////////////////////////////
 // CImgProView drawing
+
+void CImgProView::Erosion(BYTE* image, int w, int h, BYTE* outImg) {
+	int rept;
+	memcpy(outImg, image, sizeof(BYTE) * width * height);
+	int i, j;
+	int m, n;
+	BYTE flag;
+	for (rept = 0; rept < 1; rept++) {
+		for (i = 1; i < h - 1; i++) {
+			for (j = 1; j < w - 1; j++) {
+				if (image[i * w + j] == 255) {
+					flag = 0;
+					for (m = -1; m < 2; m++) {
+						for (n = -1; n < 2; n++) {
+							if (image[(i + m) * w + j + n] == 0) {
+								flag++;
+								break;
+							}
+						}
+					}
+
+					if (flag > 1)
+						outImg[i * w + j] = 0;
+				}
+
+			}
+		}
+		memcpy(image, outImg, sizeof(BYTE) * width * height);
+	}
+}
+
+void CImgProView::Dilation(BYTE* image, int w, int h, BYTE* outImg) {
+	int rept;
+	memcpy(outImg, image, sizeof(BYTE) * width * height);
+
+	int i, j;
+	int m, n;
+	BYTE flag;
+	for (rept = 0; rept < 100; rept++) {
+		for (i = 1; i < h - 1; i++) {
+			for (j = 1; j < w - 1; j++) {
+				if (image[i * w + j] == 0) {
+					flag = 0;
+					for (m = -1; m < 2; m++) {
+						for (n = -1; n < 2; n++) {
+							if (image[(i + m) * w + j + n] == 255) {
+								flag++;
+
+							}
+						}
+
+
+					}
+					if (flag > 3)
+						outImg[i * w + j] = 255;
+				}
+			}
+
+
+		}
+		memcpy(image, outImg, sizeof(BYTE) * width * height);
+	}
+
+}
 
 void CImgProView::OnDraw(CDC* pDC) {
 	CImgProDoc* pDoc = GetDocument();
@@ -340,18 +405,57 @@ void CImgProView::Color() {
 	// TODO: 在此添加命令处理程序代码
 	BYTE r, g, b;
 	int i, j;
-	double hg, hr;
-	double max = 0.0;
+	double h, s, v;
+	BYTE max, min, delta;
+	int RGB_BYTEs = 3 * width;
 	huiimg = new BYTE[width * height];
-	if(image == 0) {
+	if (image == 0) {
 		AfxMessageBox("No Images Opened\nOpen a Image First", MB_OK, 0);
 		return;
 	}
 	for (i = 0; i < height; i++)
-		for (j = 0; j < 3 * width; j = j + 3) {
-
-			huiimg[i * width + j / 3] = huiimg[i * width + j / 3] / 2;
+		for (j = 0; j < width; j = j++) {
+			b = rgbimg[i * 3 * width + j * 3];
+			g = rgbimg[i * 3 * width + j * 3 + 1];
+			r = rgbimg[i * 3 * width + j * 3 + 2];
+			min = min(min(b, g), r);
+			max = max(max(b, g), r);
+			delta = max - min;
+			if (max == min) {
+				h = 0;
+			}
+			if (max == r) {
+				if (g >= b) {
+					h = (double) 60 * (g - b) / delta;
+				}
+				else {
+					h = (double) 60 * (g - b) / delta + 360;
+				}
+			}
+			else if (max == g) {
+				h = (double) 60 * (b - r) / delta + 120;
+			}
+			else if (max == b) {
+				h = (double) 60 * (r - g) / delta + 240;
+			}
+			v = max;
+			if (v == 0) {
+				s == 0;
+			}
+			else {
+				s = (double) delta / max;
+			}
+			if (h >= 190 && h <= 245 && s >= 0.55) {
+				huiimg[i * width + j] = 255;
+			}
+			else {
+				huiimg[i * width + j] = 0;
+			}
 		}
+	outImg = new BYTE[width * height];
+	outImg2 = new BYTE[width * height];
+	Erosion(huiimg, width, height, outImg);
+	Dilation(huiimg, width, height, outImg2);
 
 	flag = 1;
 	OnInitialUpdate();
@@ -371,4 +475,3 @@ void CImgProView::Recognize() {
 	AfxMessageBox("Recognize!!!", MB_OK, 0);
 	OnInitialUpdate();
 }
-

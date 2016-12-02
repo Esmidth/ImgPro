@@ -27,6 +27,7 @@ public:
 
 	BYTE *image;
 	BYTE *outImg;
+	BYTE* outImg2;
 	BYTE *rgbimg;
 	BYTE *huiimg;
 
@@ -39,6 +40,10 @@ public:
 	char *fnames;
 	int bmpflag,rawflag;
 	int flag;
+
+	void Erosion(BYTE* image, int w, int h, BYTE* outImg);
+	void Dilation(BYTE* image, int w, int h, BYTE* outImg);
+
 
     // add image processing function 
 
