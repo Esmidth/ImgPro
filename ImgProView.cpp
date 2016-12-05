@@ -491,6 +491,8 @@ void CImgProView::Color() {
 	Dilation(huiimg, width, height, outImg2);
 	Erosion(huiimg, width, height, outImg);
 	Dilation(huiimg, width, height, outImg2);
+	Erosion(huiimg, width, height, outImg);
+	Dilation(huiimg, width, height, outImg2);
 
 	flag = 1;
 	OnInitialUpdate();
@@ -499,7 +501,7 @@ void CImgProView::Color() {
 void CImgProView::Extract() {
 	int margin = 3;
 	int l_length = 15; // level_length (for y)
-	int v_length = 5; // vertical_length (for x)
+	int v_length = 8; // vertical_length (for x)
 	int i, j;
 	int flagb1;
 	int x1_max=width, y1_max=height, x2_max=0, y2_max=0;
