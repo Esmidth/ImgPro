@@ -7,6 +7,7 @@
 
 #include "ImgProDoc.h"
 #include "ImgProView.h"
+#include <string>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -171,17 +172,37 @@ void CImgProView::OnDraw(CDC* pDC) {
 			}
 		}
 	}
-	if(flag_kuang == 1) {
+	if (flag_kuang == 1) {
+		CPen NewPen(PS_SOLID, 1, RGB(255, 0, 0));
+		pDC->SelectObject(&NewPen);
 		BYTE r, g, b;
-		for(i = y1;i < y2;i++) {
-			for (j = 3 * x1; j < 3 * x2; j+=3) 				{
+		for (i = y1; i < y2; i++)
+			for (j = 3 * x1; j < 3 * x2; j = j + 3) {
 				b = rgbimg[i * 3 * width + j];
 				g = rgbimg[i * 3 * width + j + 1];
 				r = rgbimg[i * 3 * width + j + 2];
 				pDC->SetPixelV(j / 3 - x1, i - y1 + height, RGB(r, g, b));
 			}
-		}
+		pDC->MoveTo(x1, y1);
+		pDC->LineTo(x2, y1);
+		pDC->LineTo(x2, y2);
+		pDC->LineTo(x1, y2);
+		pDC->LineTo(x1, y1);
+
+		x1 += width;
+		x2 += width;
+		pDC->MoveTo(x1, y1);
+		pDC->LineTo(x2, y1);
+		pDC->LineTo(x2, y2);
+		pDC->LineTo(x1, y2);
+		pDC->LineTo(x1, y1);
+		x1 -= width;
+		x2 -= width;
+		CString s2;
+		s2.Format("x1: %d,y1: %d\nx2: %d,y2: %d", x1,y1,x2,y2);
+		AfxMessageBox(s2, MB_OK, 0);
 	}
+
 }
 
 
@@ -452,7 +473,7 @@ void CImgProView::Color() {
 			}
 			v = max;
 			if (v == 0) {
-				s == 0;
+				s = 0;
 			}
 			else {
 				s = (double) delta / max;
@@ -468,73 +489,98 @@ void CImgProView::Color() {
 	outImg2 = new BYTE[width * height];
 	Erosion(huiimg, width, height, outImg);
 	Dilation(huiimg, width, height, outImg2);
+	Erosion(huiimg, width, height, outImg);
+	Dilation(huiimg, width, height, outImg2);
 
 	flag = 1;
 	OnInitialUpdate();
 }
 
 void CImgProView::Extract() {
-	int margin = 4;
+	int margin = 3;
+	int l_length = 15; // level_length (for y)
+	int v_length = 5; // vertical_length (for x)
 	int i, j;
-	int flagb;
+	int flagb1;
+	int x1_max=width, y1_max=height, x2_max=0, y2_max=0;
 	//255 White 0 Black
 	flag_kuang = 1;
+	if(!flag) {
+		Color();
+	}
 	if (outImg2) {
 		for (i = 0; i < height; i++) {
-			flagb = 0;
+			flagb1 = 0;
 			for (j = 1; j < width; j++) {
-				if (outImg2[i * width + j - 15] == 0 && outImg2[i * width + j - 14] == 255 && outImg2[i * width + j] == 255) {
+				if (outImg2[i * width + j - l_length] == 0 && outImg2[i * width + j - (l_length-1)] == 255 && outImg2[i * width + j] == 255) {
 					y1 = i - margin;
-					flagb = 1;
+					flagb1 = 1;
 					j = width;
 				}
 			}
-			if (flagb != 0) {
-				i = height;
+			if (flagb1 != 0) {
+				//i = height;
+				//break;
+				if(y1<y1_max) {
+					y1_max = y1;
+				}
 			}
 		}
 		for (i = height; i >= 0; i--) {
-			flagb = 0;
+			flagb1 = 0;
 			for (j = 1; j < width; j++) {
-				if (outImg2[i * width + j - 15] == 255 && outImg2[i * width + j] == 255 && outImg2[i * width + j + 1] == 0) {
+				if (outImg2[i * width + j - l_length] == 255 && outImg2[i * width + j] == 255 && outImg2[i * width + j + 1] == 0) {
 					y2 = i + margin;
-					flagb = 1;
-					j = width;
+					flagb1 = 1;
+					//j = width;
 					break;
 				}
 			}
-			if (flagb != 0) {
-				i = -1;
+			if (flagb1 != 0) {
+				//i = -1;
+				if(y2 >y2_max) {
+					y2_max = y2;
+				}
 			}
 		}
 		for (j = 1; j < width; j++) {
-			flagb = 0;
+			flagb1 = 0;
 			for (i = 0; i < height; i++) {
-				if (outImg2[(i - 15) * width + j] == 0 && outImg2[(i - 14) * width + j] == 255 && outImg2[i * width + j] == 255) {
+				if (outImg2[(i - v_length) * width + j] == 0 && outImg2[(i - v_length+1) * width + j] == 255 && outImg2[i * width + j] == 255) {
 					x1 = j - margin;// 3 ÎªÓàÁ¿
-					flagb = 1;
+					flagb1 = 1;
 					i = height;
 				}
 			}
-			if (flagb != 0) {
-				j = width;
+			if (flagb1 != 0) {
+				//j = width;
+				if(x1 < x1_max) {
+					x1_max = x1;
+				}
 			}
 		}
 		for (j = width - 2; j >= 0; j--) {
-			flagb = 0;
+			flagb1 = 0;
 			for(i = 0;i < height;i++) {
-				if(outImg2[(i-15)*width+j] == 255 && outImg2[(i-1)*width+j] == 255 && outImg2[(i*width+j)]==0) {
+				if(outImg2[(i-v_length)*width+j] == 255 && outImg2[(i-1)*width+j] == 255 && outImg2[(i*width+j)]==0) {
 					x2 = j + margin;
-					flagb = 1;
+					flagb1 = 1;
 					i = height;
 				}
 			}
-			if(flagb != 0) {
-				j = -1;
+			if(flagb1 != 0) {
+				//j = -1;
+				if(x2 > x2_max) {
+					x2_max = x2;
+				}
 			}
 		}
 
 	}
+	x2 = x2_max;
+	x1 = x1_max;
+	y1 = y1_max;
+	y2 = y2_max;
 	OnInitialUpdate();
 }
 
