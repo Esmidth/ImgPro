@@ -32,10 +32,10 @@ BEGIN_MESSAGE_MAP(CImgProView, CView)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, CView::OnFilePrintPreview)
 	ON_COMMAND(ID_32771, &CImgProView::Color)
-	ON_COMMAND(ID_32772,&CImgProView::Extract)
-	ON_COMMAND(ID_32773,&CImgProView::Split)
-	ON_COMMAND(ID_32774,&CImgProView::Recognize)
-	ON_COMMAND(ID_32775,&CImgProView::Hough)
+	ON_COMMAND(ID_32772, &CImgProView::Extract)
+	ON_COMMAND(ID_32773, &CImgProView::Split)
+	ON_COMMAND(ID_32774, &CImgProView::Recognize)
+	ON_COMMAND(ID_32775, &CImgProView::Hough)
 
 	END_MESSAGE_MAP()
 
@@ -140,14 +140,14 @@ void CImgProView::Binarize(BYTE* image, int w, int h, BYTE* outImg, int threshol
 }
 
 void CImgProView::Hough_Trans(BYTE* BMPBeforeTrans, int w, int h, BYTE* BMPAfterTrans) {
-//	memcpy(BMPAfterTrans, BMPBeforeTrans, sizeof(BYTE)*w*h);
-//	return;
-//	char *OriginalBMP, ResultBMP;
-//	unsigned char *BMPBeforeTrans, *BMPAfterTrans;
+	//	memcpy(BMPAfterTrans, BMPBeforeTrans, sizeof(BYTE)*w*h);
+	//	return;
+	//	char *OriginalBMP, ResultBMP;
+	//	unsigned char *BMPBeforeTrans, *BMPAfterTrans;
 
-//	BITMAPFILEHEADER fh;
-//	BITMAPINFOHEADER ih;
-//	RGBQUAD Color[256];
+	//	BITMAPFILEHEADER fh;
+	//	BITMAPINFOHEADER ih;
+	//	RGBQUAD Color[256];
 
 	int Row, Col, pixel;
 	//循环变量
@@ -166,7 +166,7 @@ void CImgProView::Hough_Trans(BYTE* BMPBeforeTrans, int w, int h, BYTE* BMPAfter
 	int iAngleNumber;
 	int iMaxAngleNumber = 90;
 
-//	FILE *f, *p;
+	//	FILE *f, *p;
 
 	//打开文件失败
 	/*
@@ -185,8 +185,8 @@ void CImgProView::Hough_Trans(BYTE* BMPBeforeTrans, int w, int h, BYTE* BMPAfter
 	//读取文件信息头
 	fread(&ih, sizeof(BITMAPINFOHEADER), 1, f);
 */
-//	Row = ih.biHeight;
-//	Col = ih.biWidth;
+	//	Row = ih.biHeight;
+	//	Col = ih.biWidth;
 	//列数需为4的倍数
 	Row = h;
 	Col = w;
@@ -286,7 +286,7 @@ void CImgProView::Hough_Trans(BYTE* BMPBeforeTrans, int w, int h, BYTE* BMPAfter
 				BMPAfterTrans[i * Col + j] = (unsigned char) 255;
 		}
 	}
-*/
+	*/
 
 	//fclose(f);
 	/*
@@ -296,26 +296,26 @@ void CImgProView::Hough_Trans(BYTE* BMPBeforeTrans, int w, int h, BYTE* BMPAfter
 		Color[i].rgbRed = i;
 		Color[i].rgbReserved = 0;
 	}
-*/
+	*/
 
 	//写入缓存图像数据
 	/*
 	fwrite(&fh, sizeof(BITMAPFILEHEADER), 1, p);
 	fwrite(&ih, sizeof(BITMAPINFOHEADER), 1, p);
 	fwrite(Color, sizeof(RGBQUAD), 256, p);
-
+	
 	fwrite(BMPAfterTrans, sizeof(unsigned char), Row * Col, p);
-
+	
 	fclose(p);
-*/
+	*/
 	//return;
 }
 
-void CImgProView::Sobel(BYTE* srcBmp, int width, int height,int type ,BYTE* outImg) {
+void CImgProView::Sobel(BYTE* srcBmp, int width, int height, int type, BYTE* outImg) {
 	int i, j, l, x, y;
 	// int px[6]={0};
 	//int py[6]={0};
-	int p1[4] = { 0 };
+	int p1[4] = {0};
 	//double result;
 	byte* tempy;
 	byte* tempx;
@@ -329,9 +329,9 @@ void CImgProView::Sobel(BYTE* srcBmp, int width, int height,int type ,BYTE* outI
 		for (j = 1; j < width - 1; j++)//由于使用3×3的模板，为防止越界，所以不处理最下边和最右边的两列像素
 		{
 			if (i == height - 1)
-				x = 0, y = 0;
+				x = 0 , y = 0;
 			else if (j == width - 1)
-				x = 0, y = 0;
+				x = 0 , y = 0;
 			else {
 				p1[0] = (byte)*(srcBmp + i * width + j);
 				p1[1] = (byte)*(srcBmp + i * width + j + 1);
@@ -446,6 +446,579 @@ void CImgProView::Dilation(BYTE* image, int width, int height, int type, int num
 	temp = NULL;
 }
 
+void CImgProView::sob(byte* srcBmp, int width, int height, int type) {
+	int i, j, l, x, y;
+	// int px[6]={0};
+	//int py[6]={0};
+	int p1[4] = {0};
+	//double result;
+	byte* tempy;
+	byte* tempx;
+	tempx = (byte *) malloc(sizeof(byte) * width * width);
+	if (tempx == NULL)
+		exit(-1);
+	tempy = (byte *) malloc(sizeof(byte) * width * width);
+	if (tempy == NULL)
+		exit(-1);
+	for (i = 1; i < height - 1; i++) {
+		for (j = 1; j < width - 1; j++)//由于使用3×3的模板，为防止越界，所以不处理最下边和最右边的两列像素
+		{
+			if (i == height - 1)
+				x = 0 , y = 0;
+			else if (j == width - 1)
+				x = 0 , y = 0;
+			else {
+				p1[0] = (byte)*(srcBmp + i * width + j);
+				p1[1] = (byte)*(srcBmp + i * width + j + 1);
+				p1[2] = (byte)*(srcBmp + (i + 1) * width + j);
+				p1[3] = (byte)*(srcBmp + (i + 1) * width + j + 1);
+
+
+				x = abs(p1[0] - p1[2]); //sqrt(( p1[1] - p1[2] )*( p1[1] - p1[2] ));
+				y = abs(p1[0] - p1[1]);
+				if (x > 0)
+					x = 255;
+				else
+					x = 0;
+				if (y > 0)
+					y = 255;
+				else
+					y = 0;
+			}
+			tempx[i * width + j] = (byte) x;
+			tempy[i * width + j] = (byte) y;
+		}
+	}
+	for (i = 0; i < width; i++) {
+		tempx[i] = 0;
+		tempy[i] = 0;
+		tempx[width * (height - 1) + i] = 0;
+		tempy[width * (height - 1) + i] = 0;
+	}
+	for (i = 0; i < height; i++) {
+		tempx[i * width] = 0;
+		tempy[i * width] = 0;
+		tempx[i * width + width - 1] = 0;
+		tempy[i * width + width - 1] = 0;
+	}
+	if (type == 0)
+		memcpy(srcBmp, tempx, sizeof(byte) * width * height);
+	if (type == 1)
+		memcpy(srcBmp, tempy, sizeof(byte) * width * height);
+	if (type == 2) {
+		for (i = 0; i < height; i++)
+			for (j = 0; j < width; j++) {
+				l = tempx[i * width + j] + tempy[i * height + j];
+				if (l > 255)
+					l = 255;
+				tempx[i * width + j] = l;
+			}
+		memcpy(srcBmp, tempx, sizeof(byte) * width * height);
+	}
+	free(tempx);
+	free(tempy);
+	tempx = NULL;
+	tempy = NULL;
+}
+
+void CImgProView::Hough1(Bmp1* img) {
+	int i, j, n;
+	float ang;
+	byte* temp1;
+	//int temp[2000]={0};
+	HSV* hsv = (HSV *) malloc(sizeof(struct HSV) * img->width * img->height);
+	hsvzation(img->image, hsv, img->width, img->height);
+	temp1 = (byte *) malloc(sizeof(byte) * img->height * img->width);
+
+
+	for (i = 0; i < img->height; i++) {
+		for (j = 0 , n = 0; j < img->width; n += 3 , j++) {
+			if ((hsv[i * img->width + j].H < 220.0) && (hsv[i * img->width + j].H > 180.0) && (hsv[i * img->width + j].V < 250) && (hsv[i * img->width + j].S > 0.6)) {
+				temp1[i * img->width + j] = 255;
+			}
+			else {
+				temp1[i * img->width + j] = 0;
+			}
+		}
+	}
+	Dilation(temp1, img->width, img->height, 1, 5);
+	sob(temp1, img->width, img->height, 0);
+	ang = hough(temp1, img->width, img->height);
+	if ((ang <= 8) && (ang >= 1))
+		ang = ang - 1;
+	if (ang > 90) {
+		ang = ang - 180;
+	}
+	img->ang = ang;
+}
+
+int CImgProView::hough(byte* srcBmp, int width, int height) {
+	int kmax = 0;
+	int pmax = 0;
+	int yuzhi = 0;
+	int i, j, k, n, p = (int) (height * cos(pi) + width * sin(pi));
+	int mp = (int) (sqrt(width * width + height * height) + 1);
+	int ma = 180;//180
+	//int ap;
+	int npp[180][1000];
+	for (i = 0; i < 180; i++)
+		for (j = 0; j < 1000; j++)
+			npp[i][j] = 0;
+	/*ap=90*(p+mp);
+	int *npp=(int *)malloc(sizeof(int)*ap);//myMalloc(ap,0,0);
+	memset(npp,0x00,sizeof(int)*ap);*/
+	for (i = 1; i < height; i++)
+		for (j = 1; j < width; j++) {
+			if (srcBmp[i * width + j] == 255) {
+				for (k = 1; k < ma; k++) {
+					p = (int) (i * cos(pi * k / 180) + j * sin(pi * k / 180));
+					p = (int) (p / 2 + mp / 2);
+					npp[k][p] = npp[k][p]++;
+					//npp[k*p+k]=npp[k*p+k]++;
+				}
+			}
+		}
+	kmax = 0;
+	pmax = 0;
+	n = 0;
+	for (i = 1; i < ma; i++)
+		for (j = 1; j < mp; j++) {
+			if (npp[i][j] > yuzhi)
+			//	if(npp[i*j+i]>yuzhi)
+			{
+				yuzhi = npp[i][j];
+				//  yuzhi=npp[i*j+i];
+				kmax = i;
+				pmax = j;
+			}
+		}
+
+	return kmax;
+}
+
+void CImgProView::Rotate(Bmp1* img1) {
+	int lwidth = 0, lheight = 0;
+	//int nwidth=0,nheight=0;
+	//float m;
+
+	byte* p;
+	p = Rotate_RGB(img1->image, img1->ang, img1->width, img1->height, &lwidth, &lheight);
+	img1->width = lwidth;
+	img1->height = lheight;
+	free(img1->image);
+	img1->image = NULL;
+	img1->image = p;
+
+}
+
+byte* CImgProView::Rotate_RGB(byte* image, float iRotateAngle, int width, int height, int* lwidth, int* lheight) {
+	byte* temp;
+	// 循环变量
+	int i, j, m, n, lNewWidth, lNewHeight, i0, j0;
+	// 旋转后图像的宽度和高度
+
+	// 象素在源DIB中的坐标
+
+	// 旋转角度（弧度）
+	float fRotateAngle;
+	// 旋转角度的正弦和余弦
+	float fSina, fCosa;
+	// 源图四个角的坐标（以图像中心为坐标系原点）
+	float fSrcX1, fSrcY1, fSrcX2, fSrcY2, fSrcX3, fSrcY3, fSrcX4, fSrcY4;
+	// 旋转后四个角的坐标（以图像中心为坐标系原点）
+	float fDstX1, fDstY1, fDstX2, fDstY2, fDstX3, fDstY3, fDstX4, fDstY4;
+	// 两个中间常量
+	float f1, f2;
+
+
+	// 将旋转角度从度转换到弧度
+	fRotateAngle = (float) RADIAN(iRotateAngle);
+	// 计算旋转角度的正弦
+	fSina = (float) sin((double) fRotateAngle);
+	// 计算旋转角度的余弦
+	fCosa = (float) cos((double) fRotateAngle);
+	// 计算原图的四个角的坐标（以图像中心为坐标系原点）
+	fSrcX1 = (float) (-(width - 1) / 2);
+	fSrcY1 = (float) ((height - 1) / 2);
+	fSrcX2 = (float) ((width - 1) / 2);
+	fSrcY2 = (float) ((height - 1) / 2);
+	fSrcX3 = (float) (-(width - 1) / 2);
+	fSrcY3 = (float) (-(height - 1) / 2);
+	fSrcX4 = (float) ((width - 1) / 2);
+	fSrcY4 = (float) (-(height - 1) / 2);
+
+	// 计算新图四个角的坐标（以图像中心为坐标系原点）
+	fDstX1 = fCosa * fSrcX1 + fSina * fSrcY1;
+	fDstY1 = -fSina * fSrcX1 + fCosa * fSrcY1;
+	fDstX2 = fCosa * fSrcX2 + fSina * fSrcY2;
+	fDstY2 = -fSina * fSrcX2 + fCosa * fSrcY2;
+	fDstX3 = fCosa * fSrcX3 + fSina * fSrcY3;
+	fDstY3 = -fSina * fSrcX3 + fCosa * fSrcY3;
+	fDstX4 = fCosa * fSrcX4 + fSina * fSrcY4;
+	fDstY4 = -fSina * fSrcX4 + fCosa * fSrcY4;
+	// 计算旋转后的图像实际宽度
+	lNewWidth = (int) (max(fabs(fDstX4 - fDstX1), fabs(fDstX3 - fDstX2)) + 0.5);
+
+	// 计算旋转后的图像高度
+	lNewHeight = (int) (max(fabs(fDstY4 - fDstY1), fabs(fDstY3 - fDstY2)) + 0.5);
+
+	temp = myMalloc(lNewHeight * lNewWidth * 3, 0, 0);
+	// 两个常数，这样不用以后每次都计算了
+	f1 = (float) (-0.5 * (lNewWidth - 1) * fCosa - 0.5 * (lNewHeight - 1) * fSina
+		+ 0.5 * (width - 1));
+	f2 = (float) (0.5 * (lNewWidth - 1) * fSina - 0.5 * (lNewHeight - 1) * fCosa
+		+ 0.5 * (height - 1));
+
+
+	for (i = 0; i < lNewHeight; i++) {
+		// 针对图像每列进行操作
+		for (m = 0 , j = 0; j < lNewWidth; m += 3 , j++) {
+
+			// 计算该象素在源DIB中的坐标
+			i0 = (int) (-((float) j) * fSina + ((float) i) * fCosa + f2 + 0.5);
+			j0 = (int) (((float) j) * fCosa + ((float) i) * fSina + f1 + 0.5);
+
+			// 判断是否在源图范围内
+			if ((j0 >= 0) && (j0 < width) && (i0 >= 0) && (i0 < height)) {
+				n = i0 * width * 3 + j0 * 3;
+				//*(temp + lNewWidth * (lNewHeight - 1 - i) + j)=*(image + width * (height - 1 - i0) + j0);
+				*(temp + lNewWidth * i * 3 + m + 1) = *(image + n + 1);
+				*(temp + lNewWidth * i * 3 + m + 2) = *(image + n + 2);
+				*(temp + lNewWidth * i * 3 + m) = *(image + n);
+				//*(temp1 + n)=0;
+			}
+			else {
+				// 对于源图中没有的象素，直接赋值为255
+				*(temp + lNewWidth * i * 3 + m + 1) = 0;
+				*(temp + lNewWidth * i * 3 + m + 2) = 0;
+				*(temp + lNewWidth * i * 3 + m) = 0;
+				//*(temp + lNewWidth * (lNewHeight - 1 - i) + j);
+			}
+		}
+	}
+
+	*lwidth = lNewWidth;
+	*lheight = lNewHeight;
+	return temp;
+}
+
+void CImgProView::hsvzation(BYTE* image, HSV* hsv, int width, int height) {
+	int i, j, k;
+	float min, max, delta, tmp;//h,s,v,m,n;
+	//int lineBytes=(width*24+31)/32*4;
+	byte r, g, b;
+	for (i = 0; i < height; i++) {
+		for (k = 0 , j = 0; j < width * 3; k++ , j += 3) {
+			g = image[i * width * 3 + j + 1];
+			b = image[i * width * 3 + j];
+			r = image[i * width * 3 + j + 2];
+			tmp = min(r, g);
+			min = min(tmp, b);
+			tmp = max(r, g);
+			max = max(tmp, b);
+			hsv[i * width + k].V = (int) max;
+			delta = max - min;
+			if (delta == 0) {
+				hsv[i * width + k].H = 0;
+				continue;
+				//value=0;
+				//return value;
+			}
+			if (max != 0) {
+				//tmp=delta/max;
+				hsv[i * width + k].S = delta / max;//tmp;
+			}
+			else {
+				hsv[i * width + k].S = 0;
+				hsv[i * width + k].H = 0;
+				continue;
+			}
+			if (r == max) {
+				// tmp=(g-b)/delta;
+				hsv[i * width + k].H = (g - b) / delta;//tmp;
+			}
+			else if (g == max)
+				hsv[i * width + k].H = 2 + (b - r);
+			else {
+				//tmp=4+(r-g)/delta;
+				hsv[i * width + k].H = 4 + (r - g) / delta;//tmp;
+			}
+			hsv[i * width + k].H *= 60;
+			if (hsv[i * width + k].H < 0)
+				hsv[i * width + k].H += 360;
+			//value=(int)(h+0.5);
+		}
+	}
+}
+
+byte* CImgProView::myMalloc(int num, const byte* bmp, int type) {
+	byte* p = (byte*) malloc(sizeof(byte) * num);
+	if (p == NULL) {
+		exit(-1);
+	}
+	if (type == 0)
+		memset(p, 0x00, sizeof(byte) * num);
+	if (type == 1)
+		memset(p, 255, sizeof(byte) * num);
+	if (type == 2)
+		memcpy(p, bmp, sizeof(byte) * num);
+	return p;
+}
+
+void CImgProView::edgesob8(byte* image, int width, int height) {
+	//int sum1,sum2,sum;double gray;
+	int i, j, logNum;
+	//int p[8];
+	BYTE* temp;
+	temp = (byte*) malloc(sizeof(byte) * width * height);
+	memset(temp, 0x00, sizeof(byte) * width * height);
+	for (i = 3; i < height - 2; i++)
+		for (j = 3; j < width - 2; j++) {
+			logNum = 16 * image[i * width + j] - image[(i - 2) * width + j] - image[(i - 1) * width + j - 1] - 2 * image[(i - 1) * width + j] - image[(i - 1) * width + j + 1] - image[i * width + j - 2] - 2 * image[i * width + j - 1] - 2 * image[i * width + j + 1] - image[i * width + j + 2] - image[(i + 1) * width + j - 1] - 2 * image[(i + 1) * width + j] - image[(i + 1) * width + j + 1] - image[(i + 2) * width + j];
+			if (logNum > 0)
+				temp[i * width + j] = 255;
+			else
+				temp[i * width + j] = 0;
+		}
+	memcpy(image, temp, width * height);
+	free(temp);
+	temp = NULL;
+}
+
+void CImgProView::location(byte* image, int width, int height, int yuzhi, int* HL, int* HH, int* VL, int* VH) {
+	int i, j, n, maxnum, flag = 0;
+	struct HSV* hsv;
+	int temp[2000] = {0};
+	byte* temp1;
+	hsv = (struct HSV *)malloc(sizeof(struct HSV) * width * height);
+	hsvzation(image, hsv, width, height);
+
+	temp1 = (byte *) malloc(sizeof(byte) * height * width);
+
+	//int lineBytes=(width*24+31)/32*4;
+	for (i = 0; i < height; i++) {
+		for (j = 0 , n = 0; j < width; n += 3 , j++) {
+			if ((hsv[i * width + j].H < 220.0) && (hsv[i * width + j].H > 180.0) && (hsv[i * width + j].V < 250) && (hsv[i * width + j].S > 0.6)) {
+
+				temp1[i * width + j] = 255;
+				//putpixel(j,i,RGB(255,255,255));
+			}
+			else {
+				temp1[i * width + j] = 0;
+				//putpixel(j,i,RGB(0,0,0));
+			}
+		}
+	}
+	for (i = 0; i < height; i++) {
+		for (j = 0; j < width; j++) {
+			if (temp1[i * width + j] == 255) {
+				temp[i]++;
+
+			}
+		}
+	}
+	edgesob8(temp1, width, height);
+	maxnum = temp[0];
+	for (i = 1; i < height; i++) {
+
+		if (temp[i] > maxnum)
+			maxnum = temp[i];
+	}
+	maxnum = maxnum / 3;
+	for (i = 0; i < height; i++) {
+		if (flag == 0) {
+			if (temp[i] > maxnum) {
+				*HL = i - yuzhi;
+				flag = 1;
+			}
+		}
+		if (flag == 1) {
+
+			if (temp[i] == 0) {
+				*HH = i + yuzhi;
+				break;
+			}
+		}
+	}
+	memset(temp, 0x00, sizeof(int) * width);
+	for (i = 0; i < width; i++) {
+		for (j = 0; j < height; j++) {
+			if (temp1[j * width + i] == 255) {
+				temp[i]++;
+
+			}
+		}
+	}
+	flag = 0;
+	maxnum = temp[0];
+	for (i = 1; i < width; i++) {
+
+		if (temp[i] > maxnum)
+			maxnum = temp[i];
+	}
+	maxnum = maxnum / 3;
+	for (i = 0; i < width; i++) {
+		if (temp[i] > maxnum) {
+			*VL = i - yuzhi;
+
+			break;
+		}
+	}
+	for (i = width; i > *VL; i--) {
+		if (temp[i] > maxnum) {
+			*VH = i + yuzhi;
+
+			break;
+		}
+	}
+	free(temp1);
+	temp1 = NULL;
+	free(hsv);
+}
+
+void CImgProView::CutBmp(BMP_img img, Bmp1* img1, int HL, int HH, int VL, int VH) {
+	int i, j, n;
+	//float gray;
+	int x = 0, y = 0;
+	img1->width = VH - VL;
+	img1->height = HH - HL;
+	img1->image = myMalloc(img1->height * img1->width * 3, 0, 0);//(byte *)malloc(sizeof(byte)*img1->height*img1->width*3);
+	for (x = 0 , i = HL; i < HH; x++ , i++) {
+		for (y = 0 , n = 0 , j = VL * 3; j < VH * 3; n++ , j += 3 , y += 3) {
+			img1->image[x * img1->width * 3 + y] = img.image[i * img.width * 3 + j];
+			img1->image[x * img1->width * 3 + y + 1] = img.image[i * img.width * 3 + j + 1];
+			img1->image[x * img1->width * 3 + y + 2] = img.image[i * img.width * 3 + j + 2];
+		}
+	}
+}
+
+void CImgProView::CutBmp1(Bmp1* img1, int HL, int HH, int VL, int VH) {
+	int i, j, n;
+	//float gray;
+	int x = 0, y = 0;
+	int width, height;
+	width = img1->width;
+	height = img1->height;
+
+	//myMalloc(img1->width*img1->height*3,p,0);
+
+	img1->width = VH - VL;
+	img1->height = HH - HL;
+
+	for (x = 0 , i = HL; i < HH; x++ , i++) {
+		for (y = 0 , n = 0 , j = VL * 3; j < VH * 3; n++ , j += 3 , y += 3) {
+			img1->image[x * img1->width * 3 + y] = img1->image[i * width * 3 + j];
+			img1->image[x * img1->width * 3 + y + 1] = img1->image[i * width * 3 + j + 1];
+			img1->image[x * img1->width * 3 + y + 2] = img1->image[i * width * 3 + j + 2];
+		}
+	}
+}
+
+void CImgProView::read_img(FILE* infile, BMP_img* img) {
+	DWORD i, j, l, bitcolor;
+	DWORD line24;
+	DWORD line8;
+	struct RGB* bitmap;
+	fread(&img->bfType, sizeof(WORD), 1, infile);//printf("\n打开的图为 %d",img->bfType);
+	fread(&img->size, sizeof(DWORD), 1, infile); //        printf("\nBMP size             :%l",img->size);
+	fread(&img->reser, sizeof(DWORD), 1, infile);//printf("\n保留位:");
+	fread(&img->header_length, sizeof(DWORD), 1, infile); //printf("\nheader length    :%l",img->header_length);
+	fread(&img->infoheader_length, sizeof(DWORD), 1, infile);
+	fread(&img->width, sizeof(DWORD), 1, infile);
+	fread(&img->height, sizeof(DWORD), 1, infile); //printf( "\nwidth   :%l\n  height  :%l ", img->width, img->height);
+	fread(&img->biplanes, sizeof(WORD), 1, infile);
+	fread(&img->bmp_type, sizeof(WORD), 1, infile); // printf("\nBMP Tpye             :%l ", img->bmp_type);
+	fread(&img->compres, sizeof(DWORD), 1, infile); //if(img->compres==0) {printf("\nbmp图片为非压缩!");}printf(" ");
+	fread(&img->datasize, sizeof(DWORD), 1, infile);//printf("\nBMP Data Size        :%l ",img->datasize);
+	fread(&img->bixpm, sizeof(DWORD), 1, infile);
+	fread(&img->biypm, sizeof(DWORD), 1, infile);
+	fread(&img->clrused, sizeof(DWORD), 1, infile); //printf("\n实际使用颜色数=%d ",img->clrused);printf(" ");
+	fread(&img->relclrused, sizeof(DWORD), 1, infile);
+
+	img->lineBytes = (img->width * img->bmp_type + 31) / 32 * 4;
+	//printf("\nLineBytes            :%l\n",img->lineBytes);
+
+	line24 = (img->width * 24 + 31) / 32 * 4;
+
+	line8 = (img->width * 8 + 31) / 32 * 4;
+	if (img->bmp_type == 1) {
+		bitcolor = 2;
+		printf("不能读取退出");
+		exit(-1);
+	}
+	if (img->bmp_type == 4) {
+		bitcolor = 16;
+		printf("不能读取退出");
+		exit(-1);
+	}
+	if (img->bmp_type == 8) {
+		byte* temp = (BYTE*) malloc(img->height * line8 * sizeof(BYTE));
+		memset(temp, 0x00, img->height * img->lineBytes * sizeof(BYTE));
+
+		bitcolor = 256;
+		bitmap = (struct RGB *)calloc(bitcolor, sizeof(struct RGB));
+		img->image = (unsigned char *) malloc(sizeof(unsigned char) * (line8 * img->height));
+		memset(img->image, 0x00, sizeof(byte) * line8 * img->height);
+
+		if (img->image == NULL) { fprintf(stderr, "\n Allocation error for temp in read_bmp() \n"); }
+
+		fseek(infile, 0x36, SEEK_SET);
+		fread(bitmap, sizeof(struct RGB), bitcolor, infile);
+		fseek(infile, img->header_length, SEEK_SET);
+		//fread(temp, sizeof(unsigned char),lineBytes*img->height, infile);
+		fread(temp, img->lineBytes * img->height, 1, infile);
+		if (temp == NULL)printf("\n读取失败\n");
+
+		for (i = 0; i < img->height; i++) {
+			for (j = 0; j < img->width; j++) {
+				img->image[i * img->width + j] = (byte) (0.299 * bitmap[temp[i * line8 + j]].bitb + 0.578 * bitmap[temp[i * line8 + j]].bitg + 0.114 * bitmap[temp[i * line8 + j]].bitr);
+				//	putpixel(j,img->height-i,RGB(img->image[i*img->width+j],img->image[i*img->width+j],img->image[i*img->width+j]));
+
+			}
+		}
+		free(temp);
+		temp = NULL;
+	}
+	if (img->bmp_type == 24) {
+		byte* temp = (byte *) malloc(sizeof(byte) * img->height * img->lineBytes);
+		if (temp == NULL)
+			exit(-1);
+		img->image = (unsigned char *) malloc(sizeof(unsigned char) * ((line24) * img->height));
+		if (img->image == NULL) fprintf(stderr, "\n Allocation error for temp in read_bmp() \n");
+		fseek(infile, img->header_length, SEEK_SET);
+		fread(temp, sizeof(unsigned char), (img->lineBytes) * img->height, infile);
+		// byte *temp=(byte *)malloc(sizeof(byte)*img->lineBytes*img->height)
+
+		for (i = 0; i < img->height; i++) {
+			l = 0;
+			for (j = 0; j < img->width * 3; j += 3) {
+				//l=(img->height-i-1)*img->lineBytes+j;
+				l = (img->height - i - 1) * img->width * 3 + j;
+				img->image[l + 2] = *(temp + i * img->lineBytes + j + 2);
+				img->image[l + 1] = *(temp + i * img->lineBytes + j + 1);
+				img->image[l] = *(temp + i * img->lineBytes + j);
+			}
+		}
+
+		free(temp);
+		temp = NULL;
+	}
+}
+
+void CImgProView::display_img(Bmp1* img1, CDC* pdc) {
+	int w = img1->width;
+	int h = img1->height;
+	BYTE r, g, b;
+	for (int i = 0; i < h; i++) {
+		for (int j = 0; j < w * 3; j += 3) {
+			b = img1->image[i * w * 3 + j];
+			g = img1->image[i * w * 3 + j + 1];
+			r = img1->image[i * w * 3 + j + 2];
+			pdc->SetPixelV(j / 3, i + height, RGB(r, g, b));
+		}
+	}
+}
+
 void CImgProView::OnDraw(CDC* pDC) {
 	CImgProDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
@@ -488,6 +1061,7 @@ void CImgProView::OnDraw(CDC* pDC) {
 		}
 	}
 	if (flag_hough) {
+		/*
 		BYTE gray;
 		if (HoughImg) {
 			for (i = 0; i < hough_height; i++) {
@@ -496,9 +1070,9 @@ void CImgProView::OnDraw(CDC* pDC) {
 					pDC->SetPixel(j + hough_width, i + height, RGB(gray, gray, gray));
 				}
 			}
-
 		}
-
+*/
+		display_img(&img1, pDC);
 	}
 	if (flag_kuang) {
 		CPen NewPen(PS_SOLID, 1, RGB(255, 0, 0));
@@ -929,6 +1503,7 @@ void CImgProView::Recognize() {
 }
 
 void CImgProView::Hough() {
+	/*
 	if (!flag_kuang) {
 		Extract();
 	}
@@ -943,9 +1518,30 @@ void CImgProView::Hough() {
 	//Dilation(HoughImg, hough_width, hough_height, temp);
 	Dilation(HoughImg, hough_width, hough_height, 1, 5);
 	Sobel(HoughImg, hough_width, hough_height, 0, temp);
-	memcpy(HoughImg, temp, sizeof(BYTE)*hough_width*hough_height);
+	memcpy(HoughImg, temp, sizeof(BYTE) * hough_width * hough_height);
+*/
+	FILE* f;
+	char path[80] = "test\\2.bmp";
+	byte *temp, *temp1;
+	int HL = 0, HH = 0, VH = 0, VL = 0;
 
+	if ((f = fopen(path, "rb")) == NULL) {
+		printf("\nCan not open the path: %s \n", path);
+		exit(-1);
+	}
+	read_img(f, &img);
+	fclose(f);
+	temp = nullptr;
+	temp = myMalloc(img.height * img.width * 4, temp, 0);//(byte *)malloc(sizeof(byte)*img.height*img.width*4);// byte *temp2=(byte *)malloc(sizeof(byte)*img.height*img.width);
+	temp1 = myMalloc(img.height * img.width * 4, temp, 0);
 
+	location(img.image, img.width, img.height, 15, &HL, &HH, &VL, &VH);
+	CutBmp(img, &img1, HL, HH, VL, VH);
+
+	Hough1(&img1);
+	Rotate(&img1);
+
+	//AfxMessageBox("FUCK", MB_OK, 0);
 	flag_hough = 1;
 	OnInitialUpdate();
 }
