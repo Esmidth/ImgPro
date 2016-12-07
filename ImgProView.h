@@ -53,6 +53,11 @@ public:
 	void Dilation(BYTE* image, int w, int h, BYTE* outImg);
 	void Binarize(BYTE* image, int w, int h, BYTE* outImg,int threshold);
 	void Hough_Trans(BYTE* image, int w, int h, BYTE* outImg);
+	void Sobel(BYTE* image,int w,int h,int type,BYTE* outImg);
+	void Dilation(BYTE* image,int width,int height,int type,int num);
+	void hough();
+	void Rotate();
+	void Rotate_RGB();
 
 
     // add image processing function 

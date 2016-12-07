@@ -101,7 +101,7 @@ void CImgProView::Erosion(BYTE* image, int w, int h, BYTE* outImg) {
 
 void CImgProView::Dilation(BYTE* image, int w, int h, BYTE* outImg) {
 	int rept;
-	memcpy(outImg, image, sizeof(BYTE) * width * height);
+	memcpy(outImg, image, sizeof(BYTE) * w * h);
 	int i, j;
 	int m, n;
 	BYTE flag;
@@ -122,7 +122,7 @@ void CImgProView::Dilation(BYTE* image, int w, int h, BYTE* outImg) {
 				}
 			}
 		}
-		memcpy(image, outImg, sizeof(BYTE) * width * height);
+		memcpy(image, outImg, sizeof(BYTE) * w * h);
 	}
 }
 
@@ -139,13 +139,15 @@ void CImgProView::Binarize(BYTE* image, int w, int h, BYTE* outImg, int threshol
 	}
 }
 
-void CImgProView::Hough_Trans(BYTE* image, int w, int h, BYTE* outImg) {
-	char *OriginalBMP, ResultBMP;
-	unsigned char *BMPBeforeTrans, *BMPAfterTrans;
+void CImgProView::Hough_Trans(BYTE* BMPBeforeTrans, int w, int h, BYTE* BMPAfterTrans) {
+//	memcpy(BMPAfterTrans, BMPBeforeTrans, sizeof(BYTE)*w*h);
+//	return;
+//	char *OriginalBMP, ResultBMP;
+//	unsigned char *BMPBeforeTrans, *BMPAfterTrans;
 
-	BITMAPFILEHEADER fh;
-	BITMAPINFOHEADER ih;
-	RGBQUAD Color[256];
+//	BITMAPFILEHEADER fh;
+//	BITMAPINFOHEADER ih;
+//	RGBQUAD Color[256];
 
 	int Row, Col, pixel;
 	//循环变量
@@ -164,9 +166,10 @@ void CImgProView::Hough_Trans(BYTE* image, int w, int h, BYTE* outImg) {
 	int iAngleNumber;
 	int iMaxAngleNumber = 90;
 
-	FILE *f, *p;
+//	FILE *f, *p;
 
 	//打开文件失败
+	/*
 	if ((f = fopen(OriginalBMP, "rb")) == NULL) {
 		printf("open %s error,please check\n");
 		return;
@@ -181,24 +184,27 @@ void CImgProView::Hough_Trans(BYTE* image, int w, int h, BYTE* outImg) {
 
 	//读取文件信息头
 	fread(&ih, sizeof(BITMAPINFOHEADER), 1, f);
-	Row = ih.biHeight;
-	Col = ih.biWidth;
+*/
+//	Row = ih.biHeight;
+//	Col = ih.biWidth;
 	//列数需为4的倍数
+	Row = h;
+	Col = w;
 	Col = (Col + 3) / 4 * 4;
 	iMaxDist = (int) sqrt(Row * Row + Col * Col);
 
 	//为缓存图像以及变换域分配存储空间
 	lpTransArea = (unsigned int*) calloc(iMaxAngleNumber * iMaxDist, sizeof(int));
-	BMPBeforeTrans = (unsigned char*) calloc(Row * Col, sizeof(unsigned char));
-	BMPAfterTrans = (unsigned char*) calloc(Row * Col, sizeof(unsigned char));
+	//BMPBeforeTrans = (unsigned char*) calloc(Row * Col, sizeof(unsigned char));
+	//BMPAfterTrans = (unsigned char*) calloc(Row * Col, sizeof(unsigned char));
 
 	//初始化变换域
 	for (k = 0; k < iMaxAngleNumber * iMaxDist; k++) {
 		lpTransArea[k] = 0;
 	}
 
-	fseek(f, sizeof(RGBQUAD) * 256 + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER), 0);
-	fread(BMPBeforeTrans, sizeof(unsigned char), Row * Col, f);
+	//fseek(f, sizeof(RGBQUAD) * 256 + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER), 0);
+	//fread(BMPBeforeTrans, sizeof(unsigned char), Row * Col, f);
 	//Row - height
 	//统计图像上的每一个黑点，将其量化数组储存在变换域
 	for (i = 0; i < Row; i++) {
@@ -207,10 +213,12 @@ void CImgProView::Hough_Trans(BYTE* image, int w, int h, BYTE* outImg) {
 			pixel = BMPBeforeTrans[i * Col + j];
 
 			//如果图像不是二值图，退出程序
+			/*
 			if (pixel != 0 && pixel != 255) {
 				printf("this picture is not correct");
 				return;
 			}
+*/
 			if (pixel == 0) {
 				for (iAngleNumber = 0; iAngleNumber < iMaxAngleNumber; iAngleNumber++) {
 					iDist = (int) fabs(i * cos(iAngleNumber * 2 * pi / 180.0) + j * sin(iAngleNumber * 2 * pi / 180.0)); // p = xcosa+ysina
@@ -233,9 +241,11 @@ void CImgProView::Hough_Trans(BYTE* image, int w, int h, BYTE* outImg) {
 			}
 		}
 	}
+	/*
 	printf(" maxValue1.value= %d\n", maxValue1.value);
 	printf(" maxValue1.AngleNumber= %d\n", maxValue1.AngleNumber);
 	printf(" maxValue1.Dist= %d \n", maxValue1.Dist);
+*/
 
 	//将缓冲图片底色置为黑色，将直线数据写入到缓冲图片
 	for (i = 0; i < Row; i++) {
@@ -261,11 +271,14 @@ void CImgProView::Hough_Trans(BYTE* image, int w, int h, BYTE* outImg) {
 
 		}
 	}
+	/*
 	printf(" maxValue2.value= %d\n", maxValue2.value);
 	printf(" maxValue2.AngleNumber= %d\n", maxValue2.AngleNumber);
 	printf(" maxValue2.Dist= %d \n  ", maxValue2.Dist);
+*/
 
 	//将第二条直线输出到缓存图像
+	/*
 	for (i = 0; i < Row; i++) {
 		for (j = 0; j < Col; j++) {
 			iDist = (int) fabs(i * cos(maxValue1.AngleNumber * 2 * pi / 180.0) + j * sin(maxValue1.AngleNumber * 2 * pi / 180.0));
@@ -273,16 +286,20 @@ void CImgProView::Hough_Trans(BYTE* image, int w, int h, BYTE* outImg) {
 				BMPAfterTrans[i * Col + j] = (unsigned char) 255;
 		}
 	}
+*/
 
-	fclose(f);
+	//fclose(f);
+	/*
 	for (i = 0; i < 256; i++) {
 		Color[i].rgbBlue = i;
 		Color[i].rgbGreen = i;
 		Color[i].rgbRed = i;
 		Color[i].rgbReserved = 0;
 	}
+*/
 
 	//写入缓存图像数据
+	/*
 	fwrite(&fh, sizeof(BITMAPFILEHEADER), 1, p);
 	fwrite(&ih, sizeof(BITMAPINFOHEADER), 1, p);
 	fwrite(Color, sizeof(RGBQUAD), 256, p);
@@ -290,7 +307,143 @@ void CImgProView::Hough_Trans(BYTE* image, int w, int h, BYTE* outImg) {
 	fwrite(BMPAfterTrans, sizeof(unsigned char), Row * Col, p);
 
 	fclose(p);
-	return;
+*/
+	//return;
+}
+
+void CImgProView::Sobel(BYTE* srcBmp, int width, int height,int type ,BYTE* outImg) {
+	int i, j, l, x, y;
+	// int px[6]={0};
+	//int py[6]={0};
+	int p1[4] = { 0 };
+	//double result;
+	byte* tempy;
+	byte* tempx;
+	tempx = (byte *) malloc(sizeof(byte) * width * width);
+	if (tempx == NULL)
+		exit(-1);
+	tempy = (byte *) malloc(sizeof(byte) * width * width);
+	if (tempy == NULL)
+		exit(-1);
+	for (i = 1; i < height - 1; i++) {
+		for (j = 1; j < width - 1; j++)//由于使用3×3的模板，为防止越界，所以不处理最下边和最右边的两列像素
+		{
+			if (i == height - 1)
+				x = 0, y = 0;
+			else if (j == width - 1)
+				x = 0, y = 0;
+			else {
+				p1[0] = (byte)*(srcBmp + i * width + j);
+				p1[1] = (byte)*(srcBmp + i * width + j + 1);
+				p1[2] = (byte)*(srcBmp + (i + 1) * width + j);
+				p1[3] = (byte)*(srcBmp + (i + 1) * width + j + 1);
+
+				x = abs(p1[0] - p1[2]); //sqrt(( p1[1] - p1[2] )*( p1[1] - p1[2] ));
+				y = abs(p1[0] - p1[1]);
+				if (x > 0)
+					x = 255;
+				else
+					x = 0;
+				if (y > 0)
+					y = 255;
+				else
+					y = 0;
+			}
+			tempx[i * width + j] = (byte) x;
+			tempy[i * width + j] = (byte) y;
+		}
+	}
+	for (i = 0; i < width; i++) {
+		tempx[i] = 0;
+		tempy[i] = 0;
+		tempx[width * (height - 1) + i] = 0;
+		tempy[width * (height - 1) + i] = 0;
+	}
+	for (i = 0; i < height; i++) {
+		tempx[i * width] = 0;
+		tempy[i * width] = 0;
+		tempx[i * width + width - 1] = 0;
+		tempy[i * width + width - 1] = 0;
+	}
+	/*
+	if (type == 0)
+		memcpy(srcBmp, tempx, sizeof(byte) * width * height);
+	if (type == 1)
+		memcpy(srcBmp, tempy, sizeof(byte) * width * height);
+	if (type == 2) {
+		for (i = 0; i < height; i++)
+			for (j = 0; j < width; j++) {
+				l = tempx[i * width + j] + tempy[i * height + j];
+				if (l > 255)
+					l = 255;
+				tempx[i * width + j] = l;
+			}
+		//memcpy(srcBmp, tempx, sizeof(byte) * width * height);
+	}
+*/
+	outImg = tempy;
+	/*
+	free(tempx);
+	free(tempy);
+	tempx = NULL;
+	tempy = NULL;
+*/
+
+}
+
+void CImgProView::Dilation(BYTE* image, int width, int height, int type, int num) {
+	int dwWidth = width;
+	int dwHeight = height;
+
+	int i = 0;
+	int j = 0;
+	//int n=0;
+
+	BYTE g = 0;
+
+	//double avg=0;
+	BYTE* temp;
+	int k = 0;
+
+
+	temp = (BYTE*) malloc(dwHeight * dwWidth * sizeof(BYTE));
+	memcpy(temp, image, dwHeight * dwWidth * sizeof(byte));
+
+
+	memset(temp, 0, dwWidth * dwHeight * sizeof(BYTE));
+
+
+	if (type == 0) {
+		//水平方向
+		for (i = 0; i < dwHeight; i++) {
+			for (j = (num - 1) / 2; j < dwWidth - (num - 1) / 2; j++) {
+				for (k = -(num - 1) / 2; k <= (num - 1) / 2; k++) {
+					g = *(image + dwWidth * i + j + k);
+					if (g == 255) {
+						*(temp + dwWidth * i + j) = 255;
+						break;
+					}
+				}
+			}
+		}
+	}
+	else {
+		//垂直方向
+		for (i = (num - 1) / 2; i < dwHeight - (num - 1) / 2; i++) {
+			for (j = 0; j < dwWidth; j++) {
+				for (k = -(num - 1) / 2; k <= (num - 1) / 2; k++) {
+					g = *(image + dwWidth * (i + k) + j);
+					if (g == 255) {
+						*(temp + dwWidth * i + j) = 255;
+						break;
+					}
+				}
+			}
+		}
+	}
+	memcpy(image, temp, sizeof(byte) * width * height);
+	free(temp);
+	temp = NULL;
 }
 
 void CImgProView::OnDraw(CDC* pDC) {
@@ -786,6 +939,11 @@ void CImgProView::Hough() {
 			HoughImg[i * hough_width + j] = HsvImg[(i + y1) * width + j + x1];
 		}
 	}
+	//Hough_Trans(HoughImg, hough_width, hough_height, temp);
+	//Dilation(HoughImg, hough_width, hough_height, temp);
+	Dilation(HoughImg, hough_width, hough_height, 1, 5);
+	Sobel(HoughImg, hough_width, hough_height, 0, temp);
+	memcpy(HoughImg, temp, sizeof(BYTE)*hough_width*hough_height);
 
 
 	flag_hough = 1;
