@@ -146,6 +146,9 @@
     <ResourceCompile Include="ImgPro.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Hough.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="ImgPro.h" />
     <ClInclude Include="ImgProDoc.h" />
     <ClInclude Include="ImgProView.h" />

@@ -9,7 +9,6 @@
 #define ID_32772                        32772
 #define ID_32773                        32773
 #define ID_32774                        32774
-#define ID_32775                        32775
 
 // Next default values for new objects
 // 

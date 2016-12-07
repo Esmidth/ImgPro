@@ -27,11 +27,14 @@ public:
 
 	BYTE *image;
 	BYTE *outImg;
-	BYTE* outImg2;
+	BYTE *outImg2;
 	BYTE *rgbimg;
 	BYTE *huiimg;
+	BYTE *HsvImg;
+	BYTE *HoughImg;
 
 	int width, height;
+	int hough_width, hough_height;
 
 	void readImg( int );
 	int findex;
@@ -42,11 +45,14 @@ public:
 	int flag;
 
 	int flag_kuang;
+	int flag_hough;
 
 	int x1, x2, y1, y2;
 
 	void Erosion(BYTE* image, int w, int h, BYTE* outImg);
 	void Dilation(BYTE* image, int w, int h, BYTE* outImg);
+	void Binarize(BYTE* image, int w, int h, BYTE* outImg,int threshold);
+	void Hough_Trans(BYTE* image, int w, int h, BYTE* outImg);
 
 
     // add image processing function 
@@ -87,7 +93,15 @@ public:
 	afx_msg void Extract();
 	afx_msg void Split();
 	afx_msg void Recognize();
+	afx_msg void Hough();
 };
+
+typedef struct {
+	int value;
+	int Dist;
+	int AngleNumber;
+}maxValue;
+#define pi 3.1415926
 
 #ifndef _DEBUG  // debug version in ImgProView.cpp
 inline CImgProDoc* CImgProView::GetDocument()
