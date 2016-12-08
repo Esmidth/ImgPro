@@ -39,6 +39,7 @@ struct Bmp1 {
 	byte strr[7][2500];
 	byte string[7];
 	float ang;//«„–±Ω«∂»
+	int x1, x2, y1, y2;
 };
 
 struct BMP_img {
@@ -60,7 +61,10 @@ struct BMP_img {
 	BYTE* image;
 	byte* header_info;
 	DWORD lineBytes;
-
+	int x1;
+	int x2;
+	int y1;
+	int y2;
 };
 
 class CImgProView : public CView {
@@ -97,9 +101,9 @@ public:
 	int flag_kuang;
 	int flag_hough;
 
-	int x1, x2, y1, y2;
+	//int x1, x2, y1, y2;
 	BMP_img bmp_img;
-	Bmp1 bmp_img1;
+	Bmp1 bimg1;
 
 	void Erosion(BYTE* image, int w, int h, BYTE* outImg);
 	void Dilation(BYTE* image, int w, int h, BYTE* outImg);
@@ -122,6 +126,8 @@ public:
 	void read_img(FILE* infile,BMP_img* img);
 	void display_img(Bmp1& img1,CDC* pDC);
 	void display_img(BMP_img& img, CDC* pDC);
+	void location(byte* outImg2, int width, int height, int& x1, int& x2, int &y1, int& y);
+
 
 
 	// add image processing function 

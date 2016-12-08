@@ -1,4 +1,4 @@
-// ImgProView.cpp : implementation of the CImgProView class
+ï»¿// ImgProView.cpp : implementation of the CImgProView class
 //
 //Created by Chingyi Chang 20161203
 
@@ -150,55 +150,55 @@ void CImgProView::Hough_Trans(BYTE* BMPBeforeTrans, int w, int h, BYTE* BMPAfter
 	//	RGBQUAD Color[256];
 
 	int Row, Col, pixel;
-	//Ñ­»·±äÁ¿
+	//å¾ªç¯å˜é‡
 	int i, j, k, v = 0;
 
 	int iMaxDist;
-	//±ä»»ÓòÖ¸Õë
+	//å˜æ¢åŸŸæŒ‡é’ˆ
 	unsigned int* lpTransArea;
 
 	maxValue maxValue1;
 	maxValue maxValue2;
 
 
-	//±ä»»ÓòµÄ×ø±ê
+	//å˜æ¢åŸŸçš„åæ ‡
 	int iDist;
 	int iAngleNumber;
 	int iMaxAngleNumber = 90;
 
 	//	FILE *f, *p;
 
-	//´ò¿ªÎÄ¼şÊ§°Ü
+	//æ‰“å¼€æ–‡ä»¶å¤±è´¥
 	/*
 	if ((f = fopen(OriginalBMP, "rb")) == NULL) {
 		printf("open %s error,please check\n");
 		return;
 	}
 
-	//¶ÁÈ¡ÎÄ¼şÍ·
+	//è¯»å–æ–‡ä»¶å¤´
 	fread(&fh, sizeof(BITMAPFILEHEADER), 1, f);
 	if (fh.bfType != 'MB') {
 		printf("This is not a BMP picture\n");
 		return;
 	}
 
-	//¶ÁÈ¡ÎÄ¼şĞÅÏ¢Í·
+	//è¯»å–æ–‡ä»¶ä¿¡æ¯å¤´
 	fread(&ih, sizeof(BITMAPINFOHEADER), 1, f);
 */
 	//	Row = ih.biHeight;
 	//	Col = ih.biWidth;
-	//ÁĞÊıĞèÎª4µÄ±¶Êı
+	//åˆ—æ•°éœ€ä¸º4çš„å€æ•°
 	Row = h;
 	Col = w;
 	Col = (Col + 3) / 4 * 4;
 	iMaxDist = (int) sqrt(Row * Row + Col * Col);
 
-	//Îª»º´æÍ¼ÏñÒÔ¼°±ä»»Óò·ÖÅä´æ´¢¿Õ¼ä
+	//ä¸ºç¼“å­˜å›¾åƒä»¥åŠå˜æ¢åŸŸåˆ†é…å­˜å‚¨ç©ºé—´
 	lpTransArea = (unsigned int*) calloc(iMaxAngleNumber * iMaxDist, sizeof(int));
 	//BMPBeforeTrans = (unsigned char*) calloc(Row * Col, sizeof(unsigned char));
 	//BMPAfterTrans = (unsigned char*) calloc(Row * Col, sizeof(unsigned char));
 
-	//³õÊ¼»¯±ä»»Óò
+	//åˆå§‹åŒ–å˜æ¢åŸŸ
 	for (k = 0; k < iMaxAngleNumber * iMaxDist; k++) {
 		lpTransArea[k] = 0;
 	}
@@ -206,13 +206,13 @@ void CImgProView::Hough_Trans(BYTE* BMPBeforeTrans, int w, int h, BYTE* BMPAfter
 	//fseek(f, sizeof(RGBQUAD) * 256 + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER), 0);
 	//fread(BMPBeforeTrans, sizeof(unsigned char), Row * Col, f);
 	//Row - height
-	//Í³¼ÆÍ¼ÏñÉÏµÄÃ¿Ò»¸öºÚµã£¬½«ÆäÁ¿»¯Êı×é´¢´æÔÚ±ä»»Óò
+	//ç»Ÿè®¡å›¾åƒä¸Šçš„æ¯ä¸€ä¸ªé»‘ç‚¹ï¼Œå°†å…¶é‡åŒ–æ•°ç»„å‚¨å­˜åœ¨å˜æ¢åŸŸ
 	for (i = 0; i < Row; i++) {
 		for (j = 0; j < Col; j++) {
 			BMPBeforeTrans[i * Col + 315] = 255;
 			pixel = BMPBeforeTrans[i * Col + j];
 
-			//Èç¹ûÍ¼Ïñ²»ÊÇ¶şÖµÍ¼£¬ÍË³ö³ÌĞò
+			//å¦‚æœå›¾åƒä¸æ˜¯äºŒå€¼å›¾ï¼Œé€€å‡ºç¨‹åº
 			/*
 			if (pixel != 0 && pixel != 255) {
 				printf("this picture is not correct");
@@ -229,7 +229,7 @@ void CImgProView::Hough_Trans(BYTE* BMPBeforeTrans, int w, int h, BYTE* BMPAfter
 	}
 	maxValue1.value = 0;
 	maxValue2.value = 0;
-	//²éÕÒ³öµÚÒ»ÌõÖ±Ïß
+	//æŸ¥æ‰¾å‡ºç¬¬ä¸€æ¡ç›´çº¿
 	//iDist p
 	//iAngleNumber a
 	for (iDist = 0; iDist < iMaxDist; iDist++) {
@@ -247,7 +247,7 @@ void CImgProView::Hough_Trans(BYTE* BMPBeforeTrans, int w, int h, BYTE* BMPAfter
 	printf(" maxValue1.Dist= %d \n", maxValue1.Dist);
 */
 
-	//½«»º³åÍ¼Æ¬µ×É«ÖÃÎªºÚÉ«£¬½«Ö±ÏßÊı¾İĞ´Èëµ½»º³åÍ¼Æ¬
+	//å°†ç¼“å†²å›¾ç‰‡åº•è‰²ç½®ä¸ºé»‘è‰²ï¼Œå°†ç›´çº¿æ•°æ®å†™å…¥åˆ°ç¼“å†²å›¾ç‰‡
 	for (i = 0; i < Row; i++) {
 		for (j = 0; j < Col; j++) {
 			BMPAfterTrans[i * Col + j] = 0;
@@ -258,7 +258,7 @@ void CImgProView::Hough_Trans(BYTE* BMPBeforeTrans, int w, int h, BYTE* BMPAfter
 		}
 	}
 
-	//²éÕÒ³öµÚ¶şÌõÖ±Ïß
+	//æŸ¥æ‰¾å‡ºç¬¬äºŒæ¡ç›´çº¿
 	for (iDist = 0; iDist < iMaxDist; iDist++) {
 		for (iAngleNumber = 0; iAngleNumber < iMaxAngleNumber; iAngleNumber++) {
 			if ((int)*(lpTransArea + iDist * iMaxAngleNumber + iAngleNumber) > maxValue2.value) {
@@ -277,7 +277,7 @@ void CImgProView::Hough_Trans(BYTE* BMPBeforeTrans, int w, int h, BYTE* BMPAfter
 	printf(" maxValue2.Dist= %d \n  ", maxValue2.Dist);
 */
 
-	//½«µÚ¶şÌõÖ±ÏßÊä³öµ½»º´æÍ¼Ïñ
+	//å°†ç¬¬äºŒæ¡ç›´çº¿è¾“å‡ºåˆ°ç¼“å­˜å›¾åƒ
 	/*
 	for (i = 0; i < Row; i++) {
 		for (j = 0; j < Col; j++) {
@@ -298,7 +298,7 @@ void CImgProView::Hough_Trans(BYTE* BMPBeforeTrans, int w, int h, BYTE* BMPAfter
 	}
 	*/
 
-	//Ğ´Èë»º´æÍ¼ÏñÊı¾İ
+	//å†™å…¥ç¼“å­˜å›¾åƒæ•°æ®
 	/*
 	fwrite(&fh, sizeof(BITMAPFILEHEADER), 1, p);
 	fwrite(&ih, sizeof(BITMAPINFOHEADER), 1, p);
@@ -326,7 +326,7 @@ void CImgProView::Sobel(BYTE* srcBmp, int width, int height, int type, BYTE* out
 	if (tempy == NULL)
 		exit(-1);
 	for (i = 1; i < height - 1; i++) {
-		for (j = 1; j < width - 1; j++)//ÓÉÓÚÊ¹ÓÃ3¡Á3µÄÄ£°å£¬Îª·ÀÖ¹Ô½½ç£¬ËùÒÔ²»´¦Àí×îÏÂ±ßºÍ×îÓÒ±ßµÄÁ½ÁĞÏñËØ
+		for (j = 1; j < width - 1; j++)//ç”±äºä½¿ç”¨3Ã—3çš„æ¨¡æ¿ï¼Œä¸ºé˜²æ­¢è¶Šç•Œï¼Œæ‰€ä»¥ä¸å¤„ç†æœ€ä¸‹è¾¹å’Œæœ€å³è¾¹çš„ä¸¤åˆ—åƒç´ 
 		{
 			if (i == height - 1)
 				x = 0 , y = 0;
@@ -414,7 +414,7 @@ void CImgProView::Dilation(BYTE* image, int width, int height, int type, int num
 
 
 	if (type == 0) {
-		//Ë®Æ½·½Ïò
+		//æ°´å¹³æ–¹å‘
 		for (i = 0; i < dwHeight; i++) {
 			for (j = (num - 1) / 2; j < dwWidth - (num - 1) / 2; j++) {
 				for (k = -(num - 1) / 2; k <= (num - 1) / 2; k++) {
@@ -428,7 +428,7 @@ void CImgProView::Dilation(BYTE* image, int width, int height, int type, int num
 		}
 	}
 	else {
-		//´¹Ö±·½Ïò
+		//å‚ç›´æ–¹å‘
 		for (i = (num - 1) / 2; i < dwHeight - (num - 1) / 2; i++) {
 			for (j = 0; j < dwWidth; j++) {
 				for (k = -(num - 1) / 2; k <= (num - 1) / 2; k++) {
@@ -461,7 +461,7 @@ void CImgProView::sob(byte* srcBmp, int width, int height, int type) {
 	if (tempy == NULL)
 		exit(-1);
 	for (i = 1; i < height - 1; i++) {
-		for (j = 1; j < width - 1; j++)//ÓÉÓÚÊ¹ÓÃ3¡Á3µÄÄ£°å£¬Îª·ÀÖ¹Ô½½ç£¬ËùÒÔ²»´¦Àí×îÏÂ±ßºÍ×îÓÒ±ßµÄÁ½ÁĞÏñËØ
+		for (j = 1; j < width - 1; j++)//ç”±äºä½¿ç”¨3Ã—3çš„æ¨¡æ¿ï¼Œä¸ºé˜²æ­¢è¶Šç•Œï¼Œæ‰€ä»¥ä¸å¤„ç†æœ€ä¸‹è¾¹å’Œæœ€å³è¾¹çš„ä¸¤åˆ—åƒç´ 
 		{
 			if (i == height - 1)
 				x = 0 , y = 0;
@@ -613,31 +613,31 @@ void CImgProView::Rotate(Bmp1* img1) {
 
 byte* CImgProView::Rotate_RGB(byte* image, float iRotateAngle, int width, int height, int* lwidth, int* lheight) {
 	byte* temp;
-	// Ñ­»·±äÁ¿
+	// å¾ªç¯å˜é‡
 	int i, j, m, n, lNewWidth, lNewHeight, i0, j0;
-	// Ğı×ªºóÍ¼ÏñµÄ¿í¶ÈºÍ¸ß¶È
+	// æ—‹è½¬åå›¾åƒçš„å®½åº¦å’Œé«˜åº¦
 
-	// ÏóËØÔÚÔ´DIBÖĞµÄ×ø±ê
+	// è±¡ç´ åœ¨æºDIBä¸­çš„åæ ‡
 
-	// Ğı×ª½Ç¶È£¨»¡¶È£©
+	// æ—‹è½¬è§’åº¦ï¼ˆå¼§åº¦ï¼‰
 	float fRotateAngle;
-	// Ğı×ª½Ç¶ÈµÄÕıÏÒºÍÓàÏÒ
+	// æ—‹è½¬è§’åº¦çš„æ­£å¼¦å’Œä½™å¼¦
 	float fSina, fCosa;
-	// Ô´Í¼ËÄ¸ö½ÇµÄ×ø±ê£¨ÒÔÍ¼ÏñÖĞĞÄÎª×ø±êÏµÔ­µã£©
+	// æºå›¾å››ä¸ªè§’çš„åæ ‡ï¼ˆä»¥å›¾åƒä¸­å¿ƒä¸ºåæ ‡ç³»åŸç‚¹ï¼‰
 	float fSrcX1, fSrcY1, fSrcX2, fSrcY2, fSrcX3, fSrcY3, fSrcX4, fSrcY4;
-	// Ğı×ªºóËÄ¸ö½ÇµÄ×ø±ê£¨ÒÔÍ¼ÏñÖĞĞÄÎª×ø±êÏµÔ­µã£©
+	// æ—‹è½¬åå››ä¸ªè§’çš„åæ ‡ï¼ˆä»¥å›¾åƒä¸­å¿ƒä¸ºåæ ‡ç³»åŸç‚¹ï¼‰
 	float fDstX1, fDstY1, fDstX2, fDstY2, fDstX3, fDstY3, fDstX4, fDstY4;
-	// Á½¸öÖĞ¼ä³£Á¿
+	// ä¸¤ä¸ªä¸­é—´å¸¸é‡
 	float f1, f2;
 
 
-	// ½«Ğı×ª½Ç¶È´Ó¶È×ª»»µ½»¡¶È
+	// å°†æ—‹è½¬è§’åº¦ä»åº¦è½¬æ¢åˆ°å¼§åº¦
 	fRotateAngle = (float) RADIAN(iRotateAngle);
-	// ¼ÆËãĞı×ª½Ç¶ÈµÄÕıÏÒ
+	// è®¡ç®—æ—‹è½¬è§’åº¦çš„æ­£å¼¦
 	fSina = (float) sin((double) fRotateAngle);
-	// ¼ÆËãĞı×ª½Ç¶ÈµÄÓàÏÒ
+	// è®¡ç®—æ—‹è½¬è§’åº¦çš„ä½™å¼¦
 	fCosa = (float) cos((double) fRotateAngle);
-	// ¼ÆËãÔ­Í¼µÄËÄ¸ö½ÇµÄ×ø±ê£¨ÒÔÍ¼ÏñÖĞĞÄÎª×ø±êÏµÔ­µã£©
+	// è®¡ç®—åŸå›¾çš„å››ä¸ªè§’çš„åæ ‡ï¼ˆä»¥å›¾åƒä¸­å¿ƒä¸ºåæ ‡ç³»åŸç‚¹ï¼‰
 	fSrcX1 = (float) (-(width - 1) / 2);
 	fSrcY1 = (float) ((height - 1) / 2);
 	fSrcX2 = (float) ((width - 1) / 2);
@@ -647,7 +647,7 @@ byte* CImgProView::Rotate_RGB(byte* image, float iRotateAngle, int width, int he
 	fSrcX4 = (float) ((width - 1) / 2);
 	fSrcY4 = (float) (-(height - 1) / 2);
 
-	// ¼ÆËãĞÂÍ¼ËÄ¸ö½ÇµÄ×ø±ê£¨ÒÔÍ¼ÏñÖĞĞÄÎª×ø±êÏµÔ­µã£©
+	// è®¡ç®—æ–°å›¾å››ä¸ªè§’çš„åæ ‡ï¼ˆä»¥å›¾åƒä¸­å¿ƒä¸ºåæ ‡ç³»åŸç‚¹ï¼‰
 	fDstX1 = fCosa * fSrcX1 + fSina * fSrcY1;
 	fDstY1 = -fSina * fSrcX1 + fCosa * fSrcY1;
 	fDstX2 = fCosa * fSrcX2 + fSina * fSrcY2;
@@ -656,14 +656,14 @@ byte* CImgProView::Rotate_RGB(byte* image, float iRotateAngle, int width, int he
 	fDstY3 = -fSina * fSrcX3 + fCosa * fSrcY3;
 	fDstX4 = fCosa * fSrcX4 + fSina * fSrcY4;
 	fDstY4 = -fSina * fSrcX4 + fCosa * fSrcY4;
-	// ¼ÆËãĞı×ªºóµÄÍ¼ÏñÊµ¼Ê¿í¶È
+	// è®¡ç®—æ—‹è½¬åçš„å›¾åƒå®é™…å®½åº¦
 	lNewWidth = (int) (max(fabs(fDstX4 - fDstX1), fabs(fDstX3 - fDstX2)) + 0.5);
 
-	// ¼ÆËãĞı×ªºóµÄÍ¼Ïñ¸ß¶È
+	// è®¡ç®—æ—‹è½¬åçš„å›¾åƒé«˜åº¦
 	lNewHeight = (int) (max(fabs(fDstY4 - fDstY1), fabs(fDstY3 - fDstY2)) + 0.5);
 
 	temp = myMalloc(lNewHeight * lNewWidth * 3, 0, 0);
-	// Á½¸ö³£Êı£¬ÕâÑù²»ÓÃÒÔºóÃ¿´Î¶¼¼ÆËãÁË
+	// ä¸¤ä¸ªå¸¸æ•°ï¼Œè¿™æ ·ä¸ç”¨ä»¥åæ¯æ¬¡éƒ½è®¡ç®—äº†
 	f1 = (float) (-0.5 * (lNewWidth - 1) * fCosa - 0.5 * (lNewHeight - 1) * fSina
 		+ 0.5 * (width - 1));
 	f2 = (float) (0.5 * (lNewWidth - 1) * fSina - 0.5 * (lNewHeight - 1) * fCosa
@@ -671,14 +671,14 @@ byte* CImgProView::Rotate_RGB(byte* image, float iRotateAngle, int width, int he
 
 
 	for (i = 0; i < lNewHeight; i++) {
-		// Õë¶ÔÍ¼ÏñÃ¿ÁĞ½øĞĞ²Ù×÷
+		// é’ˆå¯¹å›¾åƒæ¯åˆ—è¿›è¡Œæ“ä½œ
 		for (m = 0 , j = 0; j < lNewWidth; m += 3 , j++) {
 
-			// ¼ÆËã¸ÃÏóËØÔÚÔ´DIBÖĞµÄ×ø±ê
+			// è®¡ç®—è¯¥è±¡ç´ åœ¨æºDIBä¸­çš„åæ ‡
 			i0 = (int) (-((float) j) * fSina + ((float) i) * fCosa + f2 + 0.5);
 			j0 = (int) (((float) j) * fCosa + ((float) i) * fSina + f1 + 0.5);
 
-			// ÅĞ¶ÏÊÇ·ñÔÚÔ´Í¼·¶Î§ÄÚ
+			// åˆ¤æ–­æ˜¯å¦åœ¨æºå›¾èŒƒå›´å†…
 			if ((j0 >= 0) && (j0 < width) && (i0 >= 0) && (i0 < height)) {
 				n = i0 * width * 3 + j0 * 3;
 				//*(temp + lNewWidth * (lNewHeight - 1 - i) + j)=*(image + width * (height - 1 - i0) + j0);
@@ -688,7 +688,7 @@ byte* CImgProView::Rotate_RGB(byte* image, float iRotateAngle, int width, int he
 				//*(temp1 + n)=0;
 			}
 			else {
-				// ¶ÔÓÚÔ´Í¼ÖĞÃ»ÓĞµÄÏóËØ£¬Ö±½Ó¸³ÖµÎª255
+				// å¯¹äºæºå›¾ä¸­æ²¡æœ‰çš„è±¡ç´ ï¼Œç›´æ¥èµ‹å€¼ä¸º255
 				*(temp + lNewWidth * i * 3 + m + 1) = 0;
 				*(temp + lNewWidth * i * 3 + m + 2) = 0;
 				*(temp + lNewWidth * i * 3 + m) = 0;
@@ -696,7 +696,6 @@ byte* CImgProView::Rotate_RGB(byte* image, float iRotateAngle, int width, int he
 			}
 		}
 	}
-
 	*lwidth = lNewWidth;
 	*lheight = lNewHeight;
 	return temp;
@@ -911,20 +910,20 @@ void CImgProView::read_img(FILE* infile, BMP_img* img) {
 	DWORD line24;
 	DWORD line8;
 	struct RGB* bitmap;
-	fread(&img->bfType, sizeof(WORD), 1, infile);//printf("\n´ò¿ªµÄÍ¼Îª %d",img->bfType);
+	fread(&img->bfType, sizeof(WORD), 1, infile);//printf("\næ‰“å¼€çš„å›¾ä¸º %d",img->bfType);
 	fread(&img->bfSize, sizeof(DWORD), 1, infile); //        printf("\nBMP size             :%l",img->size);
-	fread(&img->bfReserved, sizeof(DWORD), 1, infile);//printf("\n±£ÁôÎ»:");
+	fread(&img->bfReserved, sizeof(DWORD), 1, infile);//printf("\nä¿ç•™ä½:");
 	fread(&img->bfOffBits, sizeof(DWORD), 1, infile); //printf("\nheader length    :%l",img->header_length);
 	fread(&img->biSize, sizeof(DWORD), 1, infile);
 	fread(&img->biWidth, sizeof(DWORD), 1, infile);
 	fread(&img->biHeight, sizeof(DWORD), 1, infile); //printf( "\nwidth   :%l\n  height  :%l ", img->width, img->height);
 	fread(&img->biPlanes, sizeof(WORD), 1, infile);
 	fread(&img->biBitCount, sizeof(WORD), 1, infile); // printf("\nBMP Tpye             :%l ", img->bmp_type);
-	fread(&img->biCompression, sizeof(DWORD), 1, infile); //if(img->compres==0) {printf("\nbmpÍ¼Æ¬Îª·ÇÑ¹Ëõ!");}printf(" ");
+	fread(&img->biCompression, sizeof(DWORD), 1, infile); //if(img->compres==0) {printf("\nbmpå›¾ç‰‡ä¸ºéå‹ç¼©!");}printf(" ");
 	fread(&img->biSizeImage, sizeof(DWORD), 1, infile);//printf("\nBMP Data Size        :%l ",img->datasize);
 	fread(&img->biXPelsPerMeter, sizeof(DWORD), 1, infile);
 	fread(&img->biYPelsPerMeter, sizeof(DWORD), 1, infile);
-	fread(&img->biClrUsed, sizeof(DWORD), 1, infile); //printf("\nÊµ¼ÊÊ¹ÓÃÑÕÉ«Êı=%d ",img->clrused);printf(" ");
+	fread(&img->biClrUsed, sizeof(DWORD), 1, infile); //printf("\nå®é™…ä½¿ç”¨é¢œè‰²æ•°=%d ",img->clrused);printf(" ");
 	fread(&img->biClrImportant, sizeof(DWORD), 1, infile);
 
 	img->lineBytes = (img->biWidth * img->biBitCount + 31) / 32 * 4;
@@ -935,12 +934,12 @@ void CImgProView::read_img(FILE* infile, BMP_img* img) {
 	line8 = (img->biWidth * 8 + 31) / 32 * 4;
 	if (img->biBitCount == 1) {
 		bitcolor = 2;
-		printf("²»ÄÜ¶ÁÈ¡ÍË³ö");
+		printf("ä¸èƒ½è¯»å–é€€å‡º");
 		exit(-1);
 	}
 	if (img->biBitCount == 4) {
 		bitcolor = 16;
-		printf("²»ÄÜ¶ÁÈ¡ÍË³ö");
+		printf("ä¸èƒ½è¯»å–é€€å‡º");
 		exit(-1);
 	}
 	if (img->biBitCount == 8) {
@@ -959,7 +958,7 @@ void CImgProView::read_img(FILE* infile, BMP_img* img) {
 		fseek(infile, img->bfOffBits, SEEK_SET);
 		//fread(temp, sizeof(unsigned char),lineBytes*img->height, infile);
 		fread(temp, img->lineBytes * img->biHeight, 1, infile);
-		if (temp == NULL)printf("\n¶ÁÈ¡Ê§°Ü\n");
+		if (temp == NULL)printf("\nè¯»å–å¤±è´¥\n");
 
 		for (i = 0; i < img->biHeight; i++) {
 			for (j = 0; j < img->biWidth; j++) {
@@ -1006,7 +1005,7 @@ void CImgProView::display_img(Bmp1& bmp_img1, CDC* pdc) {
 			b = bmp_img1.image[i * w * 3 + j];
 			g = bmp_img1.image[i * w * 3 + j + 1];
 			r = bmp_img1.image[i * w * 3 + j + 2];
-			pdc->SetPixelV(j / 3, i + height, RGB(r, g, b));
+			pdc->SetPixelV(j / 3 + width, i + height, RGB(r, g, b));
 		}
 	}
 }
@@ -1023,6 +1022,91 @@ void CImgProView::display_img(BMP_img& img, CDC* pDC) {
 			pDC->SetPixelV(j / 3, i, RGB(r, g, b));
 		}
 	}
+}
+
+void CImgProView::location(byte* outImg2,int width,int height,int& x1,int& x2,int &y1,int& y2) {
+	int margin = 15;
+	int l_length = 15; // level_length (for y)
+	int v_length = 8; // vertical_length (for x)
+	int i, j;
+	int flagb1;
+	int x1_max = width, y1_max = height, x2_max = 0, y2_max = 0;
+	//255 White 0 Black
+	flag_kuang = 1;
+	if (outImg2) {
+		for (i = 0; i < height; i++) {
+			flagb1 = 0;
+			for (j = 1; j < width; j++) {
+				if (outImg2[i * width + j - l_length] == 0 && outImg2[i * width + j - (l_length - 1)] == 255 && outImg2[i * width + j] == 255) {
+					y1 = i - margin;
+					flagb1 = 1;
+					j = width;
+				}
+			}
+			if (flagb1 != 0) {
+				//i = height;
+				//break;
+				if (y1 < y1_max) {
+					y1_max = y1;
+				}
+			}
+		}
+		for (i = height; i >= 0; i--) {
+			flagb1 = 0;
+			for (j = 1; j < width; j++) {
+				if (outImg2[i * width + j - l_length] == 255 && outImg2[i * width + j] == 255 && outImg2[i * width + j + 1] == 0) {
+					y2 = i + margin;
+					flagb1 = 1;
+					//j = width;
+					break;
+				}
+			}
+			if (flagb1 != 0) {
+				//i = -1;
+				if (y2 > y2_max) {
+					y2_max = y2;
+				}
+			}
+		}
+		for (j = 1; j < width; j++) {
+			flagb1 = 0;
+			for (i = 0; i < height; i++) {
+				if (outImg2[(i - v_length) * width + j] == 0 && outImg2[(i - v_length + 1) * width + j] == 255 && outImg2[i * width + j] == 255) {
+					x1 = j - margin;// 3 ÃÂªÃ“Ã ÃÂ¿
+					flagb1 = 1;
+					i = height;
+				}
+			}
+			if (flagb1 != 0) {
+				//j = width;
+				if (x1 < x1_max) {
+					x1_max = x1;
+				}
+			}
+		}
+		for (j = width - 2; j >= 0; j--) {
+			flagb1 = 0;
+			for (i = 0; i < height; i++) {
+				if (outImg2[(i - v_length) * width + j] == 255 && outImg2[(i - 1) * width + j] == 255 && outImg2[(i * width + j)] == 0) {
+					x2 = j + margin;
+					flagb1 = 1;
+					i = height;
+				}
+			}
+			if (flagb1 != 0) {
+				//j = -1;
+				if (x2 > x2_max) {
+					x2_max = x2;
+				}
+			}
+		}
+	}
+	x2 = x2_max;
+	x1 = x1_max;
+	y1 = y1_max;
+	y2 = y2_max;
+//	hough_width = x2 - x1 + 1;
+//	hough_height = y2 - y1 + 1;
 }
 
 void CImgProView::OnDraw(CDC* pDC) {
@@ -1081,9 +1165,14 @@ void CImgProView::OnDraw(CDC* pDC) {
 			}
 		}
 */
-		display_img(bmp_img1, pDC);
+		display_img(bimg1, pDC);
 	}
 	if (flag_kuang) {
+		int x1, x2, y1, y2;
+		x1 = bmp_img.x1;
+		x2 = bmp_img.x2;
+		y1 = bmp_img.y1;
+		y2 = bmp_img.y2;
 		CPen NewPen(PS_SOLID, 1, RGB(255, 0, 0));
 		pDC->SelectObject(&NewPen);
 		BYTE r, g, b;
@@ -1384,7 +1473,7 @@ void CImgProView::Color() {
 		AfxMessageBox("No Images Opened\nOpen a Image First", MB_OK, 0);
 		return;
 	}
-	for (i = 0; i < height; i++)
+	for (i = 0; i < height; i++) {
 		for (j = 0; j < width; j = j++) {
 			b = rgbimg[i * 3 * width + j * 3];
 			g = rgbimg[i * 3 * width + j * 3 + 1];
@@ -1423,6 +1512,7 @@ void CImgProView::Color() {
 				huiimg[i * width + j] = 0;
 			}
 		}
+	}
 	outImg = new BYTE[width * height];
 	outImg2 = new BYTE[width * height];
 	HsvImg = new BYTE[width * height];
@@ -1438,91 +1528,10 @@ void CImgProView::Color() {
 }
 
 void CImgProView::Extract() {
-	int margin = 15;
-	int l_length = 15; // level_length (for y)
-	int v_length = 8; // vertical_length (for x)
-	int i, j;
-	int flagb1;
-	int x1_max = width, y1_max = height, x2_max = 0, y2_max = 0;
-	//255 White 0 Black
-	flag_kuang = 1;
 	if (!flag) {
 		Color();
 	}
-	if (outImg2) {
-		for (i = 0; i < height; i++) {
-			flagb1 = 0;
-			for (j = 1; j < width; j++) {
-				if (outImg2[i * width + j - l_length] == 0 && outImg2[i * width + j - (l_length - 1)] == 255 && outImg2[i * width + j] == 255) {
-					y1 = i - margin;
-					flagb1 = 1;
-					j = width;
-				}
-			}
-			if (flagb1 != 0) {
-				//i = height;
-				//break;
-				if (y1 < y1_max) {
-					y1_max = y1;
-				}
-			}
-		}
-		for (i = height; i >= 0; i--) {
-			flagb1 = 0;
-			for (j = 1; j < width; j++) {
-				if (outImg2[i * width + j - l_length] == 255 && outImg2[i * width + j] == 255 && outImg2[i * width + j + 1] == 0) {
-					y2 = i + margin;
-					flagb1 = 1;
-					//j = width;
-					break;
-				}
-			}
-			if (flagb1 != 0) {
-				//i = -1;
-				if (y2 > y2_max) {
-					y2_max = y2;
-				}
-			}
-		}
-		for (j = 1; j < width; j++) {
-			flagb1 = 0;
-			for (i = 0; i < height; i++) {
-				if (outImg2[(i - v_length) * width + j] == 0 && outImg2[(i - v_length + 1) * width + j] == 255 && outImg2[i * width + j] == 255) {
-					x1 = j - margin;// 3 ÎªÓàÁ¿
-					flagb1 = 1;
-					i = height;
-				}
-			}
-			if (flagb1 != 0) {
-				//j = width;
-				if (x1 < x1_max) {
-					x1_max = x1;
-				}
-			}
-		}
-		for (j = width - 2; j >= 0; j--) {
-			flagb1 = 0;
-			for (i = 0; i < height; i++) {
-				if (outImg2[(i - v_length) * width + j] == 255 && outImg2[(i - 1) * width + j] == 255 && outImg2[(i * width + j)] == 0) {
-					x2 = j + margin;
-					flagb1 = 1;
-					i = height;
-				}
-			}
-			if (flagb1 != 0) {
-				//j = -1;
-				if (x2 > x2_max) {
-					x2_max = x2;
-				}
-			}
-		}
-	}
-	x2 = x2_max;
-	x1 = x1_max;
-	y1 = y1_max;
-	y2 = y2_max;
-	hough_width = x2 - x1 + 1;
-	hough_height = y2 - y1 + 1;
+	location(huiimg,bmp_img.biWidth,bmp_img.biHeight,bmp_img.x1,bmp_img.x2,bmp_img.y1,bmp_img.y2);
 	OnInitialUpdate();
 }
 
@@ -1537,10 +1546,10 @@ void CImgProView::Recognize() {
 }
 
 void CImgProView::Hough() {
-	/*
 	if (!flag_kuang) {
 		Extract();
 	}
+	/*
 	HoughImg = new BYTE[hough_width * hough_height];
 	BYTE* temp = new BYTE[hough_width * hough_height];
 	for (int i = 0; i < hough_height; i++) {
@@ -1554,13 +1563,16 @@ void CImgProView::Hough() {
 	Sobel(HoughImg, hough_width, hough_height, 0, temp);
 	memcpy(HoughImg, temp, sizeof(BYTE) * hough_width * hough_height);
 */
-	int HL = 0, HH = 0, VH = 0, VL = 0;
+	//int HL = 0, HH = 0, VH = 0, VL = 0;
 
-	location(bmp_img.image, bmp_img.biWidth, bmp_img.biHeight, 15, &HL, &HH, &VL, &VH);
-	CutBmp(bmp_img, &bmp_img1, HL, HH, VL, VH);
+	//location(bmp_img.image, bmp_img.biWidth, bmp_img.biHeight, 15, &HL, &HH, &VL, &VH);
+	CutBmp(bmp_img, &bimg1, bmp_img.y1, bmp_img.y2, bmp_img.x1, bmp_img.x2);
 
-	Hough1(&bmp_img1);
-	Rotate(&bmp_img1);
+	Hough1(&bimg1);
+	Rotate(&bimg1);
+
+	location(bimg1.image, bimg1.width, bimg1.height, bimg1.x1, bimg1.x2, bimg1.y1, bimg1.y2);
+	CutBmp1(&bimg1, bimg1.x1, bimg1.x2, bimg1.y1, bimg1.y2);
 
 	//AfxMessageBox("FUCK", MB_OK, 0);
 	flag_hough = 1;
