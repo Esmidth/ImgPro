@@ -43,20 +43,20 @@ struct Bmp1 {
 
 struct BMP_img {
 	WORD bfType;
-	DWORD size;
-	DWORD reser;
-	DWORD header_length;
-	DWORD infoheader_length;
-	DWORD width;
-	DWORD height;
-	WORD biplanes;
-	WORD bmp_type; /* 8bit 24bit; */
-	DWORD compres;
-	DWORD datasize;
-	DWORD bixpm;
-	DWORD biypm;
-	DWORD clrused;
-	DWORD relclrused;
+	DWORD bfSize;
+	DWORD bfReserved;
+	DWORD bfOffBits;
+	DWORD biSize;
+	DWORD biWidth;
+	DWORD biHeight;
+	WORD biPlanes;
+	WORD biBitCount; /* 8bit 24bit; */
+	DWORD biCompression;
+	DWORD biSizeImage;
+	DWORD biXPelsPerMeter;
+	DWORD biYPelsPerMeter;
+	DWORD biClrUsed;
+	DWORD biClrImportant;
 	BYTE* image;
 	byte* header_info;
 	DWORD lineBytes;
@@ -98,8 +98,8 @@ public:
 	int flag_hough;
 
 	int x1, x2, y1, y2;
-	struct BMP_img img;
-	struct Bmp1 img1;
+	BMP_img bmp_img;
+	Bmp1 bmp_img1;
 
 	void Erosion(BYTE* image, int w, int h, BYTE* outImg);
 	void Dilation(BYTE* image, int w, int h, BYTE* outImg);
@@ -120,7 +120,8 @@ public:
 	void CutBmp(BMP_img img, Bmp1* img1, int HL, int HH, int VL, int VH);
 	void CutBmp1(Bmp1* img1, int HL, int HH, int VL, int VH);
 	void read_img(FILE* infile,BMP_img* img);
-	void display_img(Bmp1* img1,CDC* pDC);
+	void display_img(Bmp1& img1,CDC* pDC);
+	void display_img(BMP_img& img, CDC* pDC);
 
 
 	// add image processing function 

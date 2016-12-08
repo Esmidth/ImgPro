@@ -130,10 +130,10 @@ void CImgProView::Binarize(BYTE* image, int w, int h, BYTE* outImg, int threshol
 	for (int i = 0; i < h; i++) {
 		for (int j = 0; j < w; j++) {
 			if (image[i * width + j] > threshold) {
-				outImg[i * width + j] == 255;
+				outImg[i * width + j] = 255;
 			}
 			else {
-				outImg[i * width + j] == 0;
+				outImg[i * width + j] = 0;
 			}
 		}
 	}
@@ -792,14 +792,11 @@ void CImgProView::location(byte* image, int width, int height, int yuzhi, int* H
 	byte* temp1;
 	hsv = (struct HSV *)malloc(sizeof(struct HSV) * width * height);
 	hsvzation(image, hsv, width, height);
-
 	temp1 = (byte *) malloc(sizeof(byte) * height * width);
-
 	//int lineBytes=(width*24+31)/32*4;
 	for (i = 0; i < height; i++) {
 		for (j = 0 , n = 0; j < width; n += 3 , j++) {
 			if ((hsv[i * width + j].H < 220.0) && (hsv[i * width + j].H > 180.0) && (hsv[i * width + j].V < 250) && (hsv[i * width + j].S > 0.6)) {
-
 				temp1[i * width + j] = 255;
 				//putpixel(j,i,RGB(255,255,255));
 			}
@@ -813,7 +810,6 @@ void CImgProView::location(byte* image, int width, int height, int yuzhi, int* H
 		for (j = 0; j < width; j++) {
 			if (temp1[i * width + j] == 255) {
 				temp[i]++;
-
 			}
 		}
 	}
@@ -833,7 +829,6 @@ void CImgProView::location(byte* image, int width, int height, int yuzhi, int* H
 			}
 		}
 		if (flag == 1) {
-
 			if (temp[i] == 0) {
 				*HH = i + yuzhi;
 				break;
@@ -845,7 +840,6 @@ void CImgProView::location(byte* image, int width, int height, int yuzhi, int* H
 		for (j = 0; j < height; j++) {
 			if (temp1[j * width + i] == 255) {
 				temp[i]++;
-
 			}
 		}
 	}
@@ -860,14 +854,12 @@ void CImgProView::location(byte* image, int width, int height, int yuzhi, int* H
 	for (i = 0; i < width; i++) {
 		if (temp[i] > maxnum) {
 			*VL = i - yuzhi;
-
 			break;
 		}
 	}
 	for (i = width; i > *VL; i--) {
 		if (temp[i] > maxnum) {
 			*VH = i + yuzhi;
-
 			break;
 		}
 	}
@@ -885,9 +877,9 @@ void CImgProView::CutBmp(BMP_img img, Bmp1* img1, int HL, int HH, int VL, int VH
 	img1->image = myMalloc(img1->height * img1->width * 3, 0, 0);//(byte *)malloc(sizeof(byte)*img1->height*img1->width*3);
 	for (x = 0 , i = HL; i < HH; x++ , i++) {
 		for (y = 0 , n = 0 , j = VL * 3; j < VH * 3; n++ , j += 3 , y += 3) {
-			img1->image[x * img1->width * 3 + y] = img.image[i * img.width * 3 + j];
-			img1->image[x * img1->width * 3 + y + 1] = img.image[i * img.width * 3 + j + 1];
-			img1->image[x * img1->width * 3 + y + 2] = img.image[i * img.width * 3 + j + 2];
+			img1->image[x * img1->width * 3 + y] = img.image[i * img.biWidth * 3 + j];
+			img1->image[x * img1->width * 3 + y + 1] = img.image[i * img.biWidth * 3 + j + 1];
+			img1->image[x * img1->width * 3 + y + 2] = img.image[i * img.biWidth * 3 + j + 2];
 		}
 	}
 }
@@ -920,58 +912,58 @@ void CImgProView::read_img(FILE* infile, BMP_img* img) {
 	DWORD line8;
 	struct RGB* bitmap;
 	fread(&img->bfType, sizeof(WORD), 1, infile);//printf("\n打开的图为 %d",img->bfType);
-	fread(&img->size, sizeof(DWORD), 1, infile); //        printf("\nBMP size             :%l",img->size);
-	fread(&img->reser, sizeof(DWORD), 1, infile);//printf("\n保留位:");
-	fread(&img->header_length, sizeof(DWORD), 1, infile); //printf("\nheader length    :%l",img->header_length);
-	fread(&img->infoheader_length, sizeof(DWORD), 1, infile);
-	fread(&img->width, sizeof(DWORD), 1, infile);
-	fread(&img->height, sizeof(DWORD), 1, infile); //printf( "\nwidth   :%l\n  height  :%l ", img->width, img->height);
-	fread(&img->biplanes, sizeof(WORD), 1, infile);
-	fread(&img->bmp_type, sizeof(WORD), 1, infile); // printf("\nBMP Tpye             :%l ", img->bmp_type);
-	fread(&img->compres, sizeof(DWORD), 1, infile); //if(img->compres==0) {printf("\nbmp图片为非压缩!");}printf(" ");
-	fread(&img->datasize, sizeof(DWORD), 1, infile);//printf("\nBMP Data Size        :%l ",img->datasize);
-	fread(&img->bixpm, sizeof(DWORD), 1, infile);
-	fread(&img->biypm, sizeof(DWORD), 1, infile);
-	fread(&img->clrused, sizeof(DWORD), 1, infile); //printf("\n实际使用颜色数=%d ",img->clrused);printf(" ");
-	fread(&img->relclrused, sizeof(DWORD), 1, infile);
+	fread(&img->bfSize, sizeof(DWORD), 1, infile); //        printf("\nBMP size             :%l",img->size);
+	fread(&img->bfReserved, sizeof(DWORD), 1, infile);//printf("\n保留位:");
+	fread(&img->bfOffBits, sizeof(DWORD), 1, infile); //printf("\nheader length    :%l",img->header_length);
+	fread(&img->biSize, sizeof(DWORD), 1, infile);
+	fread(&img->biWidth, sizeof(DWORD), 1, infile);
+	fread(&img->biHeight, sizeof(DWORD), 1, infile); //printf( "\nwidth   :%l\n  height  :%l ", img->width, img->height);
+	fread(&img->biPlanes, sizeof(WORD), 1, infile);
+	fread(&img->biBitCount, sizeof(WORD), 1, infile); // printf("\nBMP Tpye             :%l ", img->bmp_type);
+	fread(&img->biCompression, sizeof(DWORD), 1, infile); //if(img->compres==0) {printf("\nbmp图片为非压缩!");}printf(" ");
+	fread(&img->biSizeImage, sizeof(DWORD), 1, infile);//printf("\nBMP Data Size        :%l ",img->datasize);
+	fread(&img->biXPelsPerMeter, sizeof(DWORD), 1, infile);
+	fread(&img->biYPelsPerMeter, sizeof(DWORD), 1, infile);
+	fread(&img->biClrUsed, sizeof(DWORD), 1, infile); //printf("\n实际使用颜色数=%d ",img->clrused);printf(" ");
+	fread(&img->biClrImportant, sizeof(DWORD), 1, infile);
 
-	img->lineBytes = (img->width * img->bmp_type + 31) / 32 * 4;
+	img->lineBytes = (img->biWidth * img->biBitCount + 31) / 32 * 4;
 	//printf("\nLineBytes            :%l\n",img->lineBytes);
 
-	line24 = (img->width * 24 + 31) / 32 * 4;
+	line24 = (img->biWidth * 24 + 31) / 32 * 4;
 
-	line8 = (img->width * 8 + 31) / 32 * 4;
-	if (img->bmp_type == 1) {
+	line8 = (img->biWidth * 8 + 31) / 32 * 4;
+	if (img->biBitCount == 1) {
 		bitcolor = 2;
 		printf("不能读取退出");
 		exit(-1);
 	}
-	if (img->bmp_type == 4) {
+	if (img->biBitCount == 4) {
 		bitcolor = 16;
 		printf("不能读取退出");
 		exit(-1);
 	}
-	if (img->bmp_type == 8) {
-		byte* temp = (BYTE*) malloc(img->height * line8 * sizeof(BYTE));
-		memset(temp, 0x00, img->height * img->lineBytes * sizeof(BYTE));
+	if (img->biBitCount == 8) {
+		byte* temp = (BYTE*) malloc(img->biHeight * line8 * sizeof(BYTE));
+		memset(temp, 0x00, img->biHeight * img->lineBytes * sizeof(BYTE));
 
 		bitcolor = 256;
 		bitmap = (struct RGB *)calloc(bitcolor, sizeof(struct RGB));
-		img->image = (unsigned char *) malloc(sizeof(unsigned char) * (line8 * img->height));
-		memset(img->image, 0x00, sizeof(byte) * line8 * img->height);
+		img->image = (unsigned char *) malloc(sizeof(unsigned char) * (line8 * img->biHeight));
+		memset(img->image, 0x00, sizeof(byte) * line8 * img->biHeight);
 
 		if (img->image == NULL) { fprintf(stderr, "\n Allocation error for temp in read_bmp() \n"); }
 
 		fseek(infile, 0x36, SEEK_SET);
 		fread(bitmap, sizeof(struct RGB), bitcolor, infile);
-		fseek(infile, img->header_length, SEEK_SET);
+		fseek(infile, img->bfOffBits, SEEK_SET);
 		//fread(temp, sizeof(unsigned char),lineBytes*img->height, infile);
-		fread(temp, img->lineBytes * img->height, 1, infile);
+		fread(temp, img->lineBytes * img->biHeight, 1, infile);
 		if (temp == NULL)printf("\n读取失败\n");
 
-		for (i = 0; i < img->height; i++) {
-			for (j = 0; j < img->width; j++) {
-				img->image[i * img->width + j] = (byte) (0.299 * bitmap[temp[i * line8 + j]].bitb + 0.578 * bitmap[temp[i * line8 + j]].bitg + 0.114 * bitmap[temp[i * line8 + j]].bitr);
+		for (i = 0; i < img->biHeight; i++) {
+			for (j = 0; j < img->biWidth; j++) {
+				img->image[i * img->biWidth + j] = (byte) (0.299 * bitmap[temp[i * line8 + j]].bitb + 0.578 * bitmap[temp[i * line8 + j]].bitg + 0.114 * bitmap[temp[i * line8 + j]].bitr);
 				//	putpixel(j,img->height-i,RGB(img->image[i*img->width+j],img->image[i*img->width+j],img->image[i*img->width+j]));
 
 			}
@@ -979,21 +971,21 @@ void CImgProView::read_img(FILE* infile, BMP_img* img) {
 		free(temp);
 		temp = NULL;
 	}
-	if (img->bmp_type == 24) {
-		byte* temp = (byte *) malloc(sizeof(byte) * img->height * img->lineBytes);
+	if (img->biBitCount == 24) {
+		byte* temp = (byte *) malloc(sizeof(byte) * img->biHeight * img->lineBytes);
 		if (temp == NULL)
 			exit(-1);
-		img->image = (unsigned char *) malloc(sizeof(unsigned char) * ((line24) * img->height));
+		img->image = (unsigned char *) malloc(sizeof(unsigned char) * ((line24) * img->biHeight));
 		if (img->image == NULL) fprintf(stderr, "\n Allocation error for temp in read_bmp() \n");
-		fseek(infile, img->header_length, SEEK_SET);
-		fread(temp, sizeof(unsigned char), (img->lineBytes) * img->height, infile);
+		fseek(infile, img->bfOffBits, SEEK_SET);
+		fread(temp, sizeof(unsigned char), (img->lineBytes) * img->biHeight, infile);
 		// byte *temp=(byte *)malloc(sizeof(byte)*img->lineBytes*img->height)
 
-		for (i = 0; i < img->height; i++) {
+		for (i = 0; i < img->biHeight; i++) {
 			l = 0;
-			for (j = 0; j < img->width * 3; j += 3) {
+			for (j = 0; j < img->biWidth * 3; j += 3) {
 				//l=(img->height-i-1)*img->lineBytes+j;
-				l = (img->height - i - 1) * img->width * 3 + j;
+				l = (img->biHeight - i - 1) * img->biWidth * 3 + j;
 				img->image[l + 2] = *(temp + i * img->lineBytes + j + 2);
 				img->image[l + 1] = *(temp + i * img->lineBytes + j + 1);
 				img->image[l] = *(temp + i * img->lineBytes + j);
@@ -1005,16 +997,30 @@ void CImgProView::read_img(FILE* infile, BMP_img* img) {
 	}
 }
 
-void CImgProView::display_img(Bmp1* img1, CDC* pdc) {
-	int w = img1->width;
-	int h = img1->height;
+void CImgProView::display_img(Bmp1& bmp_img1, CDC* pdc) {
+	int w = bmp_img1.width;
+	int h = bmp_img1.height;
 	BYTE r, g, b;
 	for (int i = 0; i < h; i++) {
 		for (int j = 0; j < w * 3; j += 3) {
-			b = img1->image[i * w * 3 + j];
-			g = img1->image[i * w * 3 + j + 1];
-			r = img1->image[i * w * 3 + j + 2];
+			b = bmp_img1.image[i * w * 3 + j];
+			g = bmp_img1.image[i * w * 3 + j + 1];
+			r = bmp_img1.image[i * w * 3 + j + 2];
 			pdc->SetPixelV(j / 3, i + height, RGB(r, g, b));
+		}
+	}
+}
+
+void CImgProView::display_img(BMP_img& img, CDC* pDC) {
+	int w = img.biWidth;
+	int h = img.biHeight;
+	BYTE r, g, b;
+	for (int i = 0; i < h; i++) {
+		for (int j = 0; j < w * 3; j += 3) {
+			b = img.image[i * w * 3 + j];
+			g = img.image[i * w * 3 + j + 1];
+			r = img.image[i * w * 3 + j + 2];
+			pDC->SetPixelV(j / 3, i, RGB(r, g, b));
 		}
 	}
 }
@@ -1040,6 +1046,7 @@ void CImgProView::OnDraw(CDC* pDC) {
 	//////   show outImg here //////////////////////
 
 	if (bmpflag == 1) {
+		/*
 		BYTE r, g, b;
 		for (i = 0; i < height; i++)
 			for (j = 0; j < 3 * width; j = j + 3) {
@@ -1048,6 +1055,8 @@ void CImgProView::OnDraw(CDC* pDC) {
 				r = rgbimg[i * 3 * width + j + 2];
 				pDC->SetPixelV(j / 3, i, RGB(r, g, b));
 			}
+*/
+		display_img(bmp_img, pDC);
 	}
 	if (flag == 1) {
 		BYTE gray;
@@ -1072,7 +1081,7 @@ void CImgProView::OnDraw(CDC* pDC) {
 			}
 		}
 */
-		display_img(&img1, pDC);
+		display_img(bmp_img1, pDC);
 	}
 	if (flag_kuang) {
 		CPen NewPen(PS_SOLID, 1, RGB(255, 0, 0));
@@ -1245,6 +1254,29 @@ void CImgProView::readImg(int findex) {
 
 	fread(&bmpFHeader, sizeof(BITMAPFILEHEADER), 1, fpImg);
 	fread(&bmiHeader, sizeof(BITMAPINFOHEADER), 1, fpImg);
+	//TODO: readimg()
+	bmp_img.bfType = bmpFHeader.bfType;
+	bmp_img.bfSize = bmpFHeader.bfSize;
+	//TODO: WORD + WORD = DWORD
+	bmp_img.bfReserved = static_cast<DWORD>(bmpFHeader.bfReserved1);
+	bmp_img.bfOffBits = bmpFHeader.bfOffBits;
+
+	bmp_img.biSize = bmiHeader.biSize;
+	bmp_img.biWidth = bmiHeader.biWidth;
+	bmp_img.biHeight = bmiHeader.biHeight;
+	bmp_img.biPlanes = bmiHeader.biPlanes;
+	bmp_img.biBitCount = bmiHeader.biBitCount;
+	bmp_img.biCompression = bmiHeader.biCompression;
+	bmp_img.biSizeImage = bmiHeader.biSizeImage;
+	bmp_img.biXPelsPerMeter = bmiHeader.biXPelsPerMeter;
+	bmp_img.biYPelsPerMeter = bmiHeader.biYPelsPerMeter;
+	bmp_img.biClrUsed = bmiHeader.biClrUsed;
+	bmp_img.biClrImportant = bmiHeader.biClrImportant;
+
+	bmp_img.lineBytes = (bmp_img.biWidth * bmp_img.biBitCount + 31) / 32 * 4;
+	DWORD i, j, l, bitcolor;
+	DWORD line24 = (bmp_img.biWidth * 24 + 31) / 32 * 4;
+	DWORD line8 = (bmp_img.biWidth * 8 + 31) / 32 * 4;
 
 	width = bmiHeader.biWidth;
 	height = bmiHeader.biHeight;
@@ -1271,6 +1303,7 @@ void CImgProView::readImg(int findex) {
 				rgbimg[i * 3 * width + j] = bmiColors[image[i * width + j / 3]].rgbBlue;
 				rgbimg[i * 3 * width + j + 1] = bmiColors[image[i * width + j / 3]].rgbGreen;
 				rgbimg[i * 3 * width + j + 2] = bmiColors[image[i * width + j / 3]].rgbRed;
+				bmp_img.image = rgbimg;
 			}
 	}
 	if (bicount == 24) {
@@ -1280,6 +1313,7 @@ void CImgProView::readImg(int findex) {
 			fread(rowBuff, 1, rowLen, fpImg);
 			memcpy(rgbimg + i * 3 * width, rowBuff, 3 * width);
 		}
+		bmp_img.image = rgbimg;
 	}
 	delete rowBuff;
 
@@ -1404,7 +1438,7 @@ void CImgProView::Color() {
 }
 
 void CImgProView::Extract() {
-	int margin = 3;
+	int margin = 15;
 	int l_length = 15; // level_length (for y)
 	int v_length = 8; // vertical_length (for x)
 	int i, j;
@@ -1520,26 +1554,13 @@ void CImgProView::Hough() {
 	Sobel(HoughImg, hough_width, hough_height, 0, temp);
 	memcpy(HoughImg, temp, sizeof(BYTE) * hough_width * hough_height);
 */
-	FILE* f;
-	char path[80] = "test\\2.bmp";
-	byte *temp, *temp1;
 	int HL = 0, HH = 0, VH = 0, VL = 0;
 
-	if ((f = fopen(path, "rb")) == NULL) {
-		printf("\nCan not open the path: %s \n", path);
-		exit(-1);
-	}
-	read_img(f, &img);
-	fclose(f);
-	temp = nullptr;
-	temp = myMalloc(img.height * img.width * 4, temp, 0);//(byte *)malloc(sizeof(byte)*img.height*img.width*4);// byte *temp2=(byte *)malloc(sizeof(byte)*img.height*img.width);
-	temp1 = myMalloc(img.height * img.width * 4, temp, 0);
+	location(bmp_img.image, bmp_img.biWidth, bmp_img.biHeight, 15, &HL, &HH, &VL, &VH);
+	CutBmp(bmp_img, &bmp_img1, HL, HH, VL, VH);
 
-	location(img.image, img.width, img.height, 15, &HL, &HH, &VL, &VH);
-	CutBmp(img, &img1, HL, HH, VL, VH);
-
-	Hough1(&img1);
-	Rotate(&img1);
+	Hough1(&bmp_img1);
+	Rotate(&bmp_img1);
 
 	//AfxMessageBox("FUCK", MB_OK, 0);
 	flag_hough = 1;
