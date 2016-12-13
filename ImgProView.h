@@ -40,6 +40,7 @@ struct Bmp1 {
 	byte string[7];
 	float ang;//«„–±Ω«∂»
 	int x1, x2, y1, y2;
+	byte* huiimage;
 };
 
 struct BMP_img {
@@ -87,6 +88,9 @@ public:
 	BYTE* HsvImg;
 	BYTE* HoughImg;
 
+	BYTE* temp = nullptr;
+	BYTE* temp1 = nullptr;
+
 	int width, height;
 	int hough_width, hough_height;
 
@@ -100,6 +104,7 @@ public:
 
 	int flag_kuang;
 	int flag_hough;
+	int flag_split;
 
 	//int x1, x2, y1, y2;
 	BMP_img bmp_img;
@@ -118,18 +123,37 @@ public:
 	void Rotate(Bmp1* img1);
 	byte* Rotate_RGB(byte* image, float iRotateAngle, int width, int height, int* lwidth, int* lheight);
 	void hsvzation(BYTE* image, HSV* hsv, int width, int height);
+	void hsvzation(BYTE* image, int width, int height, BYTE* outImg);
 	byte* myMalloc(int num, const byte* bmp, int type);
 	void edgesob8(byte* image, int width, int height);
 	void location(byte* image, int width, int height, int yuzhi, int* HL, int* HH, int* VL, int* VH);
+	void location(byte* outImg2, int width, int height, int& x1, int& x2, int &y1, int& y);
 	void CutBmp(BMP_img img, Bmp1* img1, int HL, int HH, int VL, int VH);
 	void CutBmp1(Bmp1* img1, int HL, int HH, int VL, int VH);
 	void read_img(FILE* infile,BMP_img* img);
 	void display_img(Bmp1& img1,CDC* pDC);
 	void display_img(BMP_img& img, CDC* pDC);
-	void location(byte* outImg2, int width, int height, int& x1, int& x2, int &y1, int& y);
+	void display_img(BYTE* in, int width, int height, int posx, int posy, CDC* pdc);
 
+	//split
+	void huidu(Bmp1 img1, BYTE* srcBmp, BYTE* dstBmp);
+	void displaytwo(Bmp1 img, BYTE* srcBmp, BYTE* dstBmp, int yuzhi);
+	void delpoint(BYTE* dst, int width, int height, int yuzhi);
+	void shuipingtouying(Bmp1* img, BYTE* dst);
+	void cuizhitouying(Bmp1* img, BYTE* temp);
+	
+	//regonize
+	void strBmp(Bmp1* img, BYTE* temp);
+	void guiyi(Bmp1* img);
+	void readmoban(char* path, Bmp1* img2);
+	void strout(Bmp1* img);
+	void outtext(Bmp1 img1, int x, int y);
 
-
+	//regonize utility
+	void changeGray(BYTE* srcBmp, BYTE* dstBmp, int width, int height, int nWidth, int nHeight);
+	char* myitoa(int num, char* str, int radix);
+	void readstr(FILE* infile, BYTE* srcBmp);
+	int cmpstr(BYTE* src, BYTE* moban);
 	// add image processing function 
 
 
