@@ -1573,20 +1573,20 @@ void CImgProView::outtext(Bmp1 img1, int x, int y) {
 		"粤","桂","琼","渝","川","贵","云",
 		"藏","陕","甘","青","宁","新" };
 	int i;
-
+	plate_String = "";
 	printf("\n\n\n\n\n\n\n\n");
 	printf("\n        The Car Id Is\n");
 	printf("\n");
+	//s2.Format("x1: %d,y1: %d\nx2: %d,y2: %d", x1, y1, x2, y2);
+	//AfxMessageBox(s2, MB_OK, 0);
 	for (i = 0; i < 7; i++) {
 		printf("   ");
-		printf("%s", table[img1.string[i]]);
+		//printf("%s", table[img1.string[i]]);
 		//outtextxy(x+i*40,y,table[img1.string[i]]);
-
+		plate_String += table[img1.string[i]];
 	}
-	printf("\n");
-	printf("\n   This is designed by liujia\n");
-	printf("\n\n\n\n\n\n\n\n");
-
+	//AfxMessageBox(plate_String, MB_OK, 0);
+	flag_plate = 1;
 }
 
 void CImgProView::location(BYTE* outImg2, int width, int height, int& x1, int& x2, int& y1, int& y2) {
@@ -1814,7 +1814,6 @@ void CImgProView::OnDraw(CDC* pDC) {
 		}
 	}
 	//////   show outImg here //////////////////////
-
 	if (bmpflag == 1) {
 		/*
 		BYTE r, g, b;
@@ -1873,7 +1872,7 @@ void CImgProView::OnDraw(CDC* pDC) {
 */
 	}
 	if (flag_split) {
-		display_img(bimg1.image, bimg1.width, bimg1.height, width + bimg1.width, height, pDC);
+		display_img(bimg1.huiimage, bimg1.width, bimg1.height, width + bimg1.width, height, pDC);
 	}
 	if (flag_kuang) {
 		int x1, x2, y1, y2;
@@ -1910,6 +1909,9 @@ void CImgProView::OnDraw(CDC* pDC) {
 			s2.Format("x1: %d,y1: %d\nx2: %d,y2: %d", x1, y1, x2, y2);
 			AfxMessageBox(s2, MB_OK, 0);
 		}
+	}
+	if(flag_plate) {
+		TextOut(pDC->GetSafeHdc(), width*2, 0, plate_String, plate_String.GetLength());
 	}
 
 }
@@ -2027,6 +2029,7 @@ void CImgProView::readImg(int findex) {
 	flag_kuang = 0;
 	flag_hough = 0;
 	flag_split = 0;
+	flag_plate = 0;
 
 	char fullName[120];
 	sprintf(fullName, "%s\\%s", directory, fnames + findex * 100);
@@ -2245,6 +2248,9 @@ void CImgProView::Extract() {
 }
 
 void CImgProView::Split() {
+	if(!flag_hough) {
+		Hough();
+	}
 	//AfxMessageBox("Split!!!", MB_OK, 0);
 	temp1 = myMalloc(bmp_img.biHeight * bmp_img.biWidth * 4, temp, 0);
 	temp = myMalloc(bmp_img.biHeight * bmp_img.biWidth * 4, temp, 0);
@@ -2259,7 +2265,7 @@ void CImgProView::Split() {
 	cuizhitouying(&bimg1, temp1);
 
 
-	//bimg1.image = temp1; //test Otsu
+	bimg1.huiimage = temp1; //test Otsu
 	//	shuipingtouying(&bimg1, temp1);
 	memset(temp, 0, sizeof(char)*bimg1.width*bimg1.height);
 	flag_split = 1;
@@ -2268,6 +2274,9 @@ void CImgProView::Split() {
 }
 
 void CImgProView::Recognize() {
+	if(!flag_split) {
+		Split();
+	}
 	char path1[80] = "test\\moban\\";
 //	AfxMessageBox("Recognize!!!", MB_OK, 0);
 	memset(temp, 0, sizeof(char)*bimg1.width*bimg1.height);

@@ -40,7 +40,7 @@ struct Bmp1 {
 	byte string[7];
 	float ang;//«„–±Ω«∂»
 	int x1, x2, y1, y2;
-	byte* huiimage;
+	BYTE* huiimage;
 };
 
 struct BMP_img {
@@ -91,6 +91,7 @@ public:
 	BYTE* temp = nullptr;
 	BYTE* temp1 = nullptr;
 
+	CString plate_String;
 	int width, height;
 	int hough_width, hough_height;
 
@@ -105,6 +106,7 @@ public:
 	int flag_kuang;
 	int flag_hough;
 	int flag_split;
+	int flag_plate;
 
 	//int x1, x2, y1, y2;
 	BMP_img bmp_img;
