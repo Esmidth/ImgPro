@@ -41,7 +41,7 @@ struct Bmp1 {
 	byte string[7];
 	float ang;//«„–±Ω«∂»
 	int x1, x2, y1, y2;
-	byte* huiimage;
+	BYTE* huiimage;
 };
 
 struct BMP_img {

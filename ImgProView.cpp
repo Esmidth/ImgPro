@@ -2264,7 +2264,7 @@ void CImgProView::Split() {
 	cuizhitouying(&bimg1, temp1);
 
 
-	//bimg1.image = temp1; //test Otsu
+	bimg1.huiimage = temp1; //test Otsu
 	//	shuipingtouying(&bimg1, temp1);
 	bimg1.huiimg = temp1;
 	memset(temp, 0, sizeof(char)*bimg1.width*bimg1.height);
