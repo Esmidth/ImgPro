@@ -30,6 +30,7 @@ struct Bmp1 {
 	DWORD height;
 	byte strc[67][800];
 	BYTE* image;
+	BYTE* huiimg;
 	int p1[15];//xl
 	int p2[15];//xr
 	int p3[15];//yu
@@ -91,6 +92,7 @@ public:
 	BYTE* temp = nullptr;
 	BYTE* temp1 = nullptr;
 
+	CString plate_String;
 	int width, height;
 	int hough_width, hough_height;
 
@@ -105,6 +107,7 @@ public:
 	int flag_kuang;
 	int flag_hough;
 	int flag_split;
+	int flag_plate;
 
 	//int x1, x2, y1, y2;
 	BMP_img bmp_img;
